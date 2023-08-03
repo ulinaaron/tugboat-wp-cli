@@ -24,7 +24,8 @@
     "commander": "^5.1.0",
     "fs": "^0.0.1-security",
     "lodash": "^4.17.21",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "rsync": "^0.6.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.13.14",
