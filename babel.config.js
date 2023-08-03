@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   retainLines: true,
   presets: [
     ['@babel/preset-env', {

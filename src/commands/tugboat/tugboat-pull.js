@@ -4,9 +4,9 @@ import program from 'commander';
 import _ from 'lodash';
 import { pullOrPushComponents } from '../../components/pushOrPullComponents.js';
 import settings from '../../components/settings';
+import { exportDatabase, importDatabase } from '../../components/databaseInterface';
 
 program
-  .command('pull')
   .description('Pull files from the remote server using rsync')
   .option('-p, --plugins', 'Pull plugins component')
   .option('-u, --uploads', 'Pull uploads component')
@@ -28,7 +28,8 @@ program
         components.push(settings.components.themes);
       }
       if (options.database) {
-        components.push(settings.components.database);
+        // Run WP CLI export command on the source
+        // Import the exported file on the destination
       }
     }
 

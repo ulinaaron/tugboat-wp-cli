@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 
-import program from 'commander';
+import { program } from 'commander';
 import _ from 'lodash';
 import { pullOrPushComponents } from '../../components/pushOrPullComponents.js';
-
+import { exportDatabase, importDatabase } from '../../components/databaseInterface';
 
 program
-  .command('push')
   .description('Push files to the remote server using rsync')
   .option('-p, --plugins', 'Push plugins component')
   .option('-u, --uploads', 'Push uploads component')
@@ -28,7 +27,8 @@ program
         components.push(settings.components.themes);
       }
       if (options.database) {
-        components.push(settings.components.database);
+        // Run WP CLI export command on the source
+        // Import the exported file on the destination
       }
     }
 

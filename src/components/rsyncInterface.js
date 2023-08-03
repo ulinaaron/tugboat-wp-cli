@@ -1,36 +1,53 @@
+import { spawnSync } from 'child_process';
 import { readConfig } from './readConfig';
-import Rsync from 'rsync';
+import fs from 'fs';
+import path from 'path';
+import os from 'os';
 
-export function rsyncPush() {
+function rsyncPush(source, destination) {
   const config = readConfig();
 
-  const rsync = new Rsync()
-    .flags('avz')
-    .source(config.local.path)
-    .destination(config.remote.path);
+  const actualDestination = destination === 'remote' ? `${config.remote.ssh.user}@${config.remote.ssh.host}:${config.remote.path}` : destination;
+  const rsyncOptions = destination === 'remote' ? config.remote.ssh.rsync_options : '';
+  const command = `rsync -avz ${rsyncOptions} ${source} ${actualDestination}`;
+  spawnSync(command, { stdio: 'inherit' });
 
-  rsync.execute((error, code, cmd) => {
-    if (error) {
-      console.error('Error executing rsync:', error);
-    } else {
-      console.log('Pushing files using rsync:', config.local.path, 'to', config.remote.path);
-    }
-  });
+  console.log('Pushing files using rsync:', source, 'to', actualDestination);
+  console.log('Command:', command);
 }
 
-export function rsyncPull() {
-  const config = readConfig();
 
-  const rsync = new Rsync()
-    .flags('avz')
-    .source(config.remote.path)
-    .destination(config.local.path);
 
-  rsync.execute((error, code, cmd) => {
-    if (error) {
-      console.error('Error executing rsync:', error);
+function rsyncPull(source, destination) {
+    const config = readConfig();
+  
+    const actualSource = `${config.remote.ssh.user}@${config.remote.ssh.host}:${source}`;
+    const rsyncOptions = config.remote.ssh.rsync_options;
+  
+    if (config.remote.ssh.password) {
+      const password = config.remote.ssh.password;
+      const tmpFolderPath = fs.mkdtempSync(path.join(os.tmpdir(), 'rsync-'));
+      const passwordFilePath = path.join(tmpFolderPath, 'password.txt');
+      fs.writeFileSync(passwordFilePath, password);
+      spawnSync(`chmod 600 ${passwordFilePath}`);
+  
+      const commandWithPassword = `rsync -az ${rsyncOptions} --password-file=${passwordFilePath} ${actualSource} ${destination}`;
+      spawnSync(commandWithPassword, { stdio: 'inherit' });
+  
+      fs.unlinkSync(passwordFilePath);
+
+      console.log(commandWithPassword);
     } else {
-      console.log('Pulling files using rsync:', config.remote.path, 'to', config.local.path);
+      const command = `rsync -az ${rsyncOptions} ${actualSource} ${destination}`;
+      spawnSync(command, { stdio: 'inherit' });
+
+    console.log(command);
+
     }
-  });
-}
+  
+    console.log('Pulling files using rsync:', actualSource, 'to', destination);
+  }
+  
+
+export { rsyncPush, rsyncPull };
+

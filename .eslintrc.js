@@ -2,6 +2,7 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
+    "jest/globals": true
   },
   extends: [
     'airbnb-base',
@@ -11,15 +12,12 @@ module.exports = {
     SharedArrayBuffer: 'readonly',
   },
   parserOptions: {
-    ecmaVersion: 2018,
-    sourceType: 'module',
+    "ecmaVersion": 6,
+    "sourceType": "module"
   },
   rules: {
   },
   plugins: [
     'jest'
-  ],
-  env: {
-    "jest/globals": true
-  }
+  ]
 };
