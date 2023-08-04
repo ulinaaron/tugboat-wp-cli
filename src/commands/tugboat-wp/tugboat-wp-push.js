@@ -1,17 +1,17 @@
 #!/usr/bin/env node
 
-import program from 'commander';
-import _ from 'lodash';
-import { pullOrPushComponents } from '../../components/pushOrPullComponents.js';
-import settings from '../../components/settings';
-import { exportDatabase, importDatabase } from '../../components/databaseInterface';
+const { program } = require('commander');
+const _ = require('lodash');
+const { pullOrPushComponents } = require('../../components/pushOrPullComponents.js');
+const settings = require('../../components/settings.js');
+// const { exportDatabase, importDatabase } = require('../../components/databaseInterface.js');
 
 program
-  .description('Pull files from the remote server using rsync')
-  .option('-p, --plugins', 'Pull plugins component')
-  .option('-u, --uploads', 'Pull uploads component')
-  .option('-t, --themes', 'Pull themes component')
-  .option('-d, --database', 'Pull database component')
+  .description('Push files to the remote server using rsync')
+  .option('-p, --plugins', 'Push plugins component')
+  .option('-u, --uploads', 'Push uploads component')
+  .option('-t, --themes', 'Push themes component')
+  .option('-d, --database', 'Push database component')
   .action((options) => {
     let components = [];
 
@@ -33,7 +33,7 @@ program
       }
     }
 
-    pullOrPushComponents('pull', components);
+    pullOrPushComponents('push', components);
   });
 
 program.parse(process.argv);

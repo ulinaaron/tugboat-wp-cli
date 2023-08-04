@@ -1,21 +1,22 @@
-import fs from 'fs';
+const fs = require('fs');
+const path = require('path');
+const defaultConfig = require('../commands/default.config.js');
+const chalk = require('chalk');
 
-export function readConfig() {
+function readConfig() {
   try {
-    const configPath = './tugboat.config.js';
-    const configFile = fs.readFileSync(configPath, 'utf8');
-    const config = eval(configFile);
+    const configPath = require.resolve(process.cwd() + '/tugboat.config.js');
+    const config = require(configPath);
 
     // Set the swapSourceAndDestination option based on your requirement
     const swapSourceAndDestination = true;
 
-    // Return the configuration object with the updated option
-    return {
-      ...config,
-      swapSourceAndDestination,
-    };
+    // Return the merged configuration object
+    return { ...defaultConfig, ...config, swapSourceAndDestination };
   } catch (error) {
-    console.error('Error reading tugboat.config.js:', error);
+    console.error(chalk.red('Error reading tugboat.config.js:'), error);
     return null;
   }
 }
+
+module.exports = { readConfig };

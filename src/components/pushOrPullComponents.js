@@ -1,7 +1,7 @@
-import { readConfig } from './readConfig';
-import { rsyncPush, rsyncPull } from './rsyncInterface';
-import { exportDatabase, importDatabase } from './databaseInterface';
-import settings from './settings';
+const { readConfig } = require('./readConfig.js');
+const { rsyncPush, rsyncPull } = require('./rsyncInterface.js');
+const { exportDatabase, importDatabase } = require('./databaseInterface.js');
+const settings = require('./settings.js');
 
 function pullOrPushComponents(actionName, components) {
   if (!components.length) {
@@ -37,9 +37,9 @@ function pullOrPushComponents(actionName, components) {
           [source, destination] = [destination, source];
         }
         if (actionName === 'pull') {
-          rsyncPull(source, destination);
+          rsyncPull(source, config.local.path + settings.content );
         } else if (actionName === 'push') {
-          rsyncPush(source, destination);
+          rsyncPush(source, config.remote.path + settings.content );
         }
       }
     } else {
@@ -48,4 +48,6 @@ function pullOrPushComponents(actionName, components) {
   });
 }
 
-export { pullOrPushComponents };
+module.exports = {
+  pullOrPushComponents
+};

@@ -1,6 +1,6 @@
-import { execSync } from 'child_process';
+const { execSync } = require('child_process');
 
-export function exportDatabase(exportFilePath) {
+function exportDatabase(exportFilePath) {
   try {
     execSync(`wp db export ${exportFilePath}`);
     console.log(`Database exported successfully to ${exportFilePath}`);
@@ -9,7 +9,7 @@ export function exportDatabase(exportFilePath) {
   }
 }
 
-export function importDatabase(importFilePath) {
+function importDatabase(importFilePath) {
   try {
     execSync(`wp db import ${importFilePath}`);
     console.log(`Database imported successfully from ${importFilePath}`);
@@ -17,3 +17,8 @@ export function importDatabase(importFilePath) {
     console.error('Error importing the database:', error);
   }
 }
+
+module.exports = {
+  exportDatabase,
+  importDatabase
+};

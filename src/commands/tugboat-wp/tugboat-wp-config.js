@@ -1,5 +1,5 @@
-import program from 'commander';
-import { readConfig } from '../../components/readConfig';
+const { program } = require('commander');
+const { readConfig } = require('../../components/readConfig.js');
 
 program
   .command('config')
