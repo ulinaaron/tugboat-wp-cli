@@ -6,6 +6,12 @@ const path = require('path');
 const os = require('os');
 const chalk = require('chalk');
 
+/**
+ * Pushes files using rsync from a source directory to a destination.
+ *
+ * @param {string} source - The path of the source directory.
+ * @param {string} destination - The destination directory or 'remote' to push to a remote server.
+ */
 function rsyncPush(source, destination) {
   const config = readConfig();
 
@@ -24,6 +30,12 @@ function rsyncPush(source, destination) {
   });
 }
 
+/**
+ * rsyncPull is a function that performs a file transfer using the rsync command.
+ *
+ * @param {string} source - the source path of the files to be transferred.
+ * @param {string} destination - the destination path where the files will be transferred to.
+ */
 function rsyncPull(source, destination) {
   const config = readConfig();
 

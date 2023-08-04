@@ -3,6 +3,13 @@ const { rsyncPush, rsyncPull } = require('./rsyncInterface.js');
 const { exportDatabase, importDatabase } = require('./databaseInterface.js');
 const settings = require('./settings.js');
 
+/**
+ * Executes the specified action on a list of components.
+ *
+ * @param {string} actionName - The name of the action to perform on the components.
+ * @param {Array} components - The list of components to perform the action on.
+ * @return {void} 
+ */
 function pullOrPushComponents(actionName, components) {
   if (!components.length) {
     console.log(`Please specify at least one component to ${actionName}: -p, -u, -t, or -d`);
