@@ -2,7 +2,7 @@ const fs = require('fs');
 // const path = require('path');
 const defaultConfig = require('../commands/default.config.js');
 const chalk = require('chalk');
-const findConfigPath = require('../util/findConfig.js');
+const findConfigPath = require('./findConfig.js');
 
 /**
  * Reads the configuration from the tugboat.config.js file.

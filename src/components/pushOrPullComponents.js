@@ -1,6 +1,6 @@
-const { readConfig } = require('./readConfig.js');
-const { rsyncPush, rsyncPull } = require('./rsyncInterface.js');
-const { exportDatabase, importDatabase } = require('./databaseInterface.js');
+const { readConfig } = require('../util/readConfig.js');
+const { rsyncPush, rsyncPull } = require('../interface/rsyncInterface.js');
+const { exportDatabase, importDatabase } = require('../interface/databaseInterface.js');
 const settings = require('./settings.js');
 
 /**

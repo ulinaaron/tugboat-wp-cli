@@ -1,6 +1,6 @@
 const { exec } = require('child_process');
-const { readConfig } = require('./readConfig.js');
-const settings = require('./settings.js');
+const { readConfig } = require('../util/readConfig.js');
+const settings = require('../components/settings.js');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
