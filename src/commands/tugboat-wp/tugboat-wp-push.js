@@ -2,8 +2,8 @@
 
 const { program } = require('commander');
 const _ = require('lodash');
-const { pullOrPushComponents } = require('../../components/pushOrPullComponents.js');
-const settings = require('../../components/settings.js');
+const biDirectionalComponents = require('../../controllers/biDirectionalComponents.js');
+const settings = require('../../util/settings.js');
 // const { exportDatabase, importDatabase } = require('../../components/databaseInterface.js');
 const check = require('../../util/check.js');
 const chalk = require('chalk');
@@ -41,7 +41,7 @@ program
       }
     }
 
-    pullOrPushComponents('push', components);
+    biDirectionalComponents('push', components);
   });
 
 program.parse(process.argv);

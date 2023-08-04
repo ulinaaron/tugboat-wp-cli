@@ -1,6 +1,6 @@
 const fs = require('fs');
 // const path = require('path');
-const defaultConfig = require('../commands/default.config.js');
+const defaultConfig = require('./default.config.js');
 const chalk = require('chalk');
 const findConfigPath = require('./findConfig.js');
 

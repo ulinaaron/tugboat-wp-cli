@@ -1,7 +1,7 @@
 const { readConfig } = require('../util/readConfig.js');
-const { rsyncPush, rsyncPull } = require('../interface/rsyncInterface.js');
-const { exportDatabase, importDatabase } = require('../interface/databaseInterface.js');
-const settings = require('./settings.js');
+const { rsyncPush, rsyncPull } = require('../interfaces/rsyncInterface.js');
+const { exportDatabase, importDatabase } = require('../interfaces/databaseInterface.js');
+const settings = require('../util/settings.js');
 
 /**
  * Executes the specified action on a list of components.
@@ -10,7 +10,7 @@ const settings = require('./settings.js');
  * @param {Array} components - The list of components to perform the action on.
  * @return {void} 
  */
-function pullOrPushComponents(actionName, components) {
+function biDirectionalComponents(actionName, components) {
   if (!components.length) {
     console.log(`Please specify at least one component to ${actionName}: -p, -u, -t, or -d`);
     return;
@@ -55,6 +55,4 @@ function pullOrPushComponents(actionName, components) {
   });
 }
 
-module.exports = {
-  pullOrPushComponents
-};
+module.exports = biDirectionalComponents;
