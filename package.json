@@ -10,9 +10,10 @@
     "link": "npm link",
     "unlink": "npm unlink tugboat-wp",
     "setup": "npm run build && npm run link",
-    "remove": "npm run unlink && npm run clean"
+    "remove": "npm run unlink && npm run clean",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Aaron Mazade",
+  "author": "Aaron Mazade <ulinaaron@tutamail.com>",
   "license": "ISC",
   "description": "The Tugboat WP CLI is a command-line interface (CLI) tool designed to simplify and streamline WordPress development workflows.",
   "dependencies": {
@@ -42,5 +43,9 @@
   },
   "engines": {
     "node": ">=16.0.0"
-  }
+  },
+  "files": [
+    "src/",
+    "lib/"
+  ]
 }
