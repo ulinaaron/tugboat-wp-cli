@@ -15,19 +15,45 @@ const chalk = require('chalk');
 function rsyncPush(source, destination) {
   const config = readConfig();
 
-  const actualDestination = destination === 'remote' ? `${config.remote.ssh.user}@${config.remote.ssh.host}:${config.remote.path}` : destination;
-  const rsyncOptions = destination === 'remote' ? config.remote.ssh.rsync_options : '';
-  const command = `rsync -avz ${rsyncOptions} ${source} ${actualDestination}`;
+  const actualDestination = `${config.remote.ssh.user}@${config.remote.ssh.host}:${destination}`;
+  const rsyncOptions = config.remote.ssh.rsync_options;
 
-  exec(command, { stdio: 'inherit' }, (error, stdout, stderr) => {
-    if (error) {
-      console.error(chalk.red('Error running rsync push command:'), error);
-      return;
-    }
+  if (config.remote.ssh.password) {
+    const password = config.remote.ssh.password;
+    const tmpFolderPath = fs.mkdtempSync(path.join(os.tmpdir(), 'rsync-'));
+    const passwordFilePath = path.join(tmpFolderPath, 'password.txt');
+    fs.writeFileSync(passwordFilePath, password);
+    exec(`chmod 600 ${passwordFilePath}`, (error, stdout, stderr) => {
+      if (error) {
+        console.error(chalk.red('Error setting permissions for password file:'), error);
+        return;
+      }
 
-    console.log(chalk.bold('Pushing files using rsync:'), source, 'to', actualDestination);
-    console.log(chalk.bold('Command:'), command);
-  });
+      const commandWithPassword = `rsync -azv ${rsyncOptions} --password-file=${passwordFilePath} ${source} ${actualDestination}`;
+
+      exec(commandWithPassword, { stdio: 'inherit' }, (error, stdout, stderr) => {
+        fs.unlinkSync(passwordFilePath);
+
+        if (error) {
+          console.error(chalk.red('Error running rsync pull command with password:'), error);
+          return;
+        }
+      });
+    });
+  } else {
+    const command = `rsync -avz ${rsyncOptions} ${source} ${actualDestination}`;
+
+    exec(command, { stdio: 'inherit' }, (error, stdout, stderr) => {
+      if (error) {
+        console.error(chalk.red('Error running rsync pull command:'), error);
+        return;
+      }
+    });
+  }
+
+  console.log(chalk.bold('Transporting your assets to your remote server:'));
+  console.log(chalk.yellow('Source:'), source);
+  console.log(chalk.cyan('Destination:'), destination);
 }
 
 /**
@@ -75,7 +101,7 @@ function rsyncPull(source, destination) {
     });
   }
 
-  console.log(chalk.bold('Performing component action using rsync:'));
+  console.log(chalk.bold('Transporting your assets to your local server:'));
   console.log(chalk.yellow('Source:'), source);
   console.log(chalk.cyan('Destination:'), destination);
 }

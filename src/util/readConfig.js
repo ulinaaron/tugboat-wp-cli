@@ -19,11 +19,8 @@ function readConfig() {
 
     const config = require(configPath);
 
-    // Set the swapSourceAndDestination option based on your requirement
-    const swapSourceAndDestination = true;
-
     // Return the merged configuration object
-    return { ...defaultConfig, ...config, swapSourceAndDestination };
+    return { ...defaultConfig, ...config };
   } catch (error) {
     console.error(chalk.red('Error reading tugboat.config.js:'), error);
     return null;

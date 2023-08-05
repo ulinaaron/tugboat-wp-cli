@@ -41,7 +41,7 @@ program
       }
     }
 
-    biDirectionalComponents('pull', components);
+    biDirectionalComponents('pull', components, true);
   });
 
 program.parse(process.argv);

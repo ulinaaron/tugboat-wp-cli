@@ -10,7 +10,7 @@ const settings = require('../util/settings.js');
  * @param {Array} components - The list of components to perform the action on.
  * @return {void} 
  */
-function biDirectionalComponents(actionName, components) {
+function biDirectionalComponents(actionName, components, swapSourceAndDestination = false) {
   if (!components.length) {
     console.log(`Please specify at least one component to ${actionName}: -p, -u, -t, or -d`);
     return;
@@ -27,20 +27,20 @@ function biDirectionalComponents(actionName, components) {
 
       if (componentName === settings.components.database) {
         if (actionName === 'pull') {
-          if (config.swapSourceAndDestination) {
+          if (swapSourceAndDestination) {
             [source, destination] = [destination, source];
           }
           rsyncPull(source, destination);
           importDatabase('/path/to/imported/database.sql');
         } else if (actionName === 'push') {
-          if (config.swapSourceAndDestination) {
+          if (swapSourceAndDestination) {
             [source, destination] = [destination, source];
           }
           exportDatabase('/path/to/exported/database.sql');
           rsyncPush(source, destination);
         }
       } else {
-        if (config.swapSourceAndDestination) {
+        if (swapSourceAndDestination) {
           [source, destination] = [destination, source];
         }
         if (actionName === 'pull') {
