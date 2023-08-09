@@ -1,6 +1,6 @@
 const { readConfig } = require('../util/readConfig.js');
 const { rsyncPush, rsyncPull } = require('../interfaces/rsyncInterface.js');
-// const { databaseProcess } = require('../interfaces/databaseInterface.js');
+const { databaseProcess } = require('../interfaces/databaseInterface.js');
 const settings = require('../util/settings.js');
 
 /**
@@ -8,18 +8,26 @@ const settings = require('../util/settings.js');
  *
  * @param {string} actionName - The name of the action to perform on the components.
  * @param {Array} components - The list of components to perform the action on.
- * @return {void} 
+ * @return {void}
  */
-function biDirectionalComponents(actionName, components, swapSourceAndDestination = false) {
+function biDirectionalComponents(
+  actionName,
+  components,
+  swapSourceAndDestination = false,
+) {
   if (!components.length) {
-    console.log(`Please specify at least one component to ${actionName}: -p, -u, -t, or -d`);
+    console.log(
+      `Please specify at least one component to ${actionName}: -p, -u, -t, or -d`,
+    );
     return;
   }
 
   const config = readConfig();
 
   components.forEach((component) => {
-    const componentName = Object.keys(settings.components).find((key) => settings.components[key] === component);
+    const componentName = Object.keys(settings.components).find(
+      (key) => settings.components[key] === component,
+    );
 
     if (componentName) {
       let source = config.local.path + component;
@@ -30,21 +38,21 @@ function biDirectionalComponents(actionName, components, swapSourceAndDestinatio
           if (swapSourceAndDestination) {
             [source, destination] = [destination, source];
           }
-          // databaseProcess('pull');
+          databaseProcess('pull');
         } else if (actionName === 'push') {
           if (swapSourceAndDestination) {
             [source, destination] = [destination, source];
           }
-          // databaseProcess('push');
+          databaseProcess('push');
         }
       } else {
         if (swapSourceAndDestination) {
           [source, destination] = [destination, source];
         }
         if (actionName === 'pull') {
-          rsyncPull(source, config.local.path + settings.content );
+          rsyncPull(source, config.local.path + settings.content);
         } else if (actionName === 'push') {
-          rsyncPush(source, config.remote.path + settings.content );
+          rsyncPush(source, config.remote.path + settings.content);
         }
       }
     } else {

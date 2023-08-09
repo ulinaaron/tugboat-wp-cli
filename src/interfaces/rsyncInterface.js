@@ -25,20 +25,30 @@ function rsyncPush(source, destination) {
     fs.writeFileSync(passwordFilePath, password);
     exec(`chmod 600 ${passwordFilePath}`, (error, stdout, stderr) => {
       if (error) {
-        console.error(chalk.red('Error setting permissions for password file:'), error);
+        console.error(
+          chalk.red('Error setting permissions for password file:'),
+          error,
+        );
         return;
       }
 
       const commandWithPassword = `rsync -azv ${rsyncOptions} --password-file=${passwordFilePath} ${source} ${actualDestination}`;
 
-      exec(commandWithPassword, { stdio: 'inherit' }, (error, stdout, stderr) => {
-        fs.unlinkSync(passwordFilePath);
+      exec(
+        commandWithPassword,
+        { stdio: 'inherit' },
+        (error, stdout, stderr) => {
+          fs.unlinkSync(passwordFilePath);
 
-        if (error) {
-          console.error(chalk.red('Error running rsync pull command with password:'), error);
-          return;
-        }
-      });
+          if (error) {
+            console.error(
+              chalk.red('Error running rsync pull command with password:'),
+              error,
+            );
+            return;
+          }
+        },
+      );
     });
   } else {
     const command = `rsync -avz ${rsyncOptions} ${source} ${actualDestination}`;
@@ -75,20 +85,30 @@ function rsyncPull(source, destination) {
     fs.writeFileSync(passwordFilePath, password);
     exec(`chmod 600 ${passwordFilePath}`, (error, stdout, stderr) => {
       if (error) {
-        console.error(chalk.red('Error setting permissions for password file:'), error);
+        console.error(
+          chalk.red('Error setting permissions for password file:'),
+          error,
+        );
         return;
       }
 
       const commandWithPassword = `rsync -azv ${rsyncOptions} --password-file=${passwordFilePath} ${actualSource} ${destination}`;
 
-      exec(commandWithPassword, { stdio: 'inherit' }, (error, stdout, stderr) => {
-        fs.unlinkSync(passwordFilePath);
+      exec(
+        commandWithPassword,
+        { stdio: 'inherit' },
+        (error, stdout, stderr) => {
+          fs.unlinkSync(passwordFilePath);
 
-        if (error) {
-          console.error(chalk.red('Error running rsync pull command with password:'), error);
-          return;
-        }
-      });
+          if (error) {
+            console.error(
+              chalk.red('Error running rsync pull command with password:'),
+              error,
+            );
+            return;
+          }
+        },
+      );
     });
   } else {
     const command = `rsync -azv ${rsyncOptions} ${actualSource} ${destination}`;
@@ -108,5 +128,5 @@ function rsyncPull(source, destination) {
 
 module.exports = {
   rsyncPush,
-  rsyncPull
+  rsyncPull,
 };
