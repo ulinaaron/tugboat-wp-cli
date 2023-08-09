@@ -1,6 +1,6 @@
 const { readConfig } = require('../util/readConfig.js');
 const { rsyncPush, rsyncPull } = require('../interfaces/rsyncInterface.js');
-const { exportDatabase, importDatabase } = require('../interfaces/databaseInterface.js');
+// const { databaseProcess } = require('../interfaces/databaseInterface.js');
 const settings = require('../util/settings.js');
 
 /**
@@ -30,14 +30,12 @@ function biDirectionalComponents(actionName, components, swapSourceAndDestinatio
           if (swapSourceAndDestination) {
             [source, destination] = [destination, source];
           }
-          rsyncPull(source, destination);
-          importDatabase('/path/to/imported/database.sql');
+          // databaseProcess('pull');
         } else if (actionName === 'push') {
           if (swapSourceAndDestination) {
             [source, destination] = [destination, source];
           }
-          exportDatabase('/path/to/exported/database.sql');
-          rsyncPush(source, destination);
+          // databaseProcess('push');
         }
       } else {
         if (swapSourceAndDestination) {

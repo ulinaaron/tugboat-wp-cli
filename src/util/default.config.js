@@ -12,7 +12,7 @@ module.exports = {
     },
     remote: {
       host: 'https://example.com',
-      path: '/home/master/applications/website/public_html',
+      path: '/home/master/applications/website/public_html/',
       database: {
         name: 'remote',
         user: 'root',

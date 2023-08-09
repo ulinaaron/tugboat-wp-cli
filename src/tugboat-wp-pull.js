@@ -2,10 +2,9 @@
 
 const { program } = require('commander');
 const _ = require('lodash');
-const biDirectionalComponents = require('../../controllers/biDirectionalComponents.js');
-const settings = require('../../util/settings.js');
-// const { exportDatabase, importDatabase } = require('../../components/databaseInterface.js');
-const check = require('../../util/check.js');
+const biDirectionalComponents = require('./controllers/biDirectionalComponents.js');
+const settings = require('./util/settings.js');
+const check = require('./util/check.js');
 const chalk = require('chalk');
 
 program
@@ -15,15 +14,22 @@ program
   .option('-t, --themes', 'Pull themes component')
   .option('-d, --database', 'Pull database component')
   .action((options) => {
-
     if (!check()) {
-      console.error(chalk.bold('Notice:') + ' Cannot execute command outside of a WordPress directory.');
+      console.error(
+        chalk.bold('Notice:') +
+          ' Cannot execute command outside of a WordPress directory.',
+      );
       process.exit(1); // Exit the script with a non-zero status code
     }
 
     let components = [];
 
-    if (!options.plugins && !options.uploads && !options.themes && !options.database) {
+    if (
+      !options.plugins &&
+      !options.uploads &&
+      !options.themes &&
+      !options.database
+    ) {
       components = Object.values(settings.components);
     } else {
       if (options.plugins) {
@@ -36,8 +42,7 @@ program
         components.push(settings.components.themes);
       }
       if (options.database) {
-        // Run WP CLI export command on the source
-        // Import the exported file on the destination
+        components.push(settings.components.database);
       }
     }
 
