@@ -42,7 +42,10 @@
     ]
   },
   "bin": {
-    "tugboat-wp": "./lib/tugboat-wp.js"
+    "tugboat-wp": "./lib/tugboat-wp.js",
+    "tugboat-wp-init": "./lib/tugboat-wp-init.js",
+    "tugboat-wp-push": "./lib/tugboat-wp-push.js",
+    "tugboat-wp-pull": "./lib/tugboat-wp-pull.js"
   },
   "engines": {
     "node": ">=16.0.0"
