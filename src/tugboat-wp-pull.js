@@ -10,10 +10,10 @@ const inquirer = require('inquirer');
 
 program
   .description('Pull files from the remote server using rsync')
-  .option('-p, --plugins', 'Pull plugins component')
-  .option('-u, --uploads', 'Pull uploads component')
-  .option('-t, --themes', 'Pull themes component')
-  .option('-d, --database', 'Pull database component')
+  .option('-p, --plugins', 'Pull plugins assets')
+  .option('-u, --uploads', 'Pull uploads assets')
+  .option('-t, --themes', 'Pull themes assets')
+  .option('-d, --database', 'Pull database assets')
   .action(async (options) => {
     if (!check()) {
       console.error(

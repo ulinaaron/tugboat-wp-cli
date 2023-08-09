@@ -10,10 +10,10 @@ const inquirer = require('inquirer');
 
 program
   .description('Push files to the remote server using rsync')
-  .option('-p, --plugins', 'Push plugins component')
-  .option('-u, --uploads', 'Push uploads component')
-  .option('-t, --themes', 'Push themes component')
-  .option('-d, --database', 'Push database component')
+  .option('-p, --plugins', 'Push plugins assets')
+  .option('-u, --uploads', 'Push uploads assets')
+  .option('-t, --themes', 'Push themes assets')
+  .option('-d, --database', 'Push database assets')
   .action(async (options) => {
     if (!check()) {
       console.error(

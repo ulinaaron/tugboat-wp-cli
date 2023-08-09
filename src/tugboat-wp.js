@@ -16,7 +16,6 @@ program
   .command(
     'push <flag>',
     chalk.red.bold('PUSH') + ' WordPress assets to remote.',
-  )
-  .command('test', chalk.red.bold('PUSH') + ' WordPress assets to remote.');
+  );
 
 program.parse(process.argv);
