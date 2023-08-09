@@ -17,6 +17,10 @@
   "author": "Aaron Mazade <ulinaaron@tutamail.com>",
   "license": "ISC",
   "description": "The Tugboat WP CLI is a command-line interface (CLI) tool designed to simplify and streamline WordPress development workflows.",
+  "keywords": [
+    "wordpress",
+    "deployment"
+  ],
   "dependencies": {
     "chalk": "^4.1.2",
     "commander": "^5.1.0",
