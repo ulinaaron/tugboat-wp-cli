@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 const { program } = require('commander');
-const _ = require('lodash');
 const biDirectionalComponents = require('./controllers/biDirectionalComponents.js');
 const settings = require('./util/settings.js');
 const check = require('./util/check.js');
