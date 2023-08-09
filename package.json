@@ -1,6 +1,6 @@
 {
   "name": "tugboat-wp",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "scripts": {
     "start": "npm run build && npm run link && npm run watch",
     "lint": "npx eslint ./src",
