@@ -14,7 +14,7 @@ const chalk = require('chalk');
  */
 function rsyncPush(source, destination) {
   const config = readConfig();
-
+  const exclude = config.remote.exclude.join(',');
   const actualDestination = `${config.remote.ssh.user}@${config.remote.ssh.host}:${destination}`;
   const rsyncOptions = config.remote.ssh.rsync_options;
 
@@ -32,7 +32,12 @@ function rsyncPush(source, destination) {
         return;
       }
 
-      const commandWithPassword = `rsync -azv ${rsyncOptions} --password-file=${passwordFilePath} ${source} ${actualDestination}`;
+      let commandWithPassword = `rsync -azv ${rsyncOptions} --password-file=${passwordFilePath} ${source} ${actualDestination}`;
+
+      // Append --exclude flag if there are exclusions
+      if (exclude.length > 0) {
+        commandWithPassword += ` --exclude={${exclude}}`;
+      }
 
       exec(
         commandWithPassword,
@@ -51,7 +56,12 @@ function rsyncPush(source, destination) {
       );
     });
   } else {
-    const command = `rsync -avz ${rsyncOptions} ${source} ${actualDestination}`;
+    let command = `rsync -avz ${rsyncOptions} ${source} ${actualDestination}`;
+
+    // Append --exclude flag if there are exclusions
+    if (exclude.length > 0) {
+      command += ` --exclude={${exclude}}`;
+    }
 
     exec(command, { stdio: 'inherit' }, (error, stdout, stderr) => {
       if (error) {
