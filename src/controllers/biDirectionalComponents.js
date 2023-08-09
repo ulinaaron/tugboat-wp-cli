@@ -1,6 +1,6 @@
 const { readConfig } = require('../util/readConfig.js');
 const { rsyncPush, rsyncPull } = require('../interfaces/rsyncInterface.js');
-const { databaseProcess } = require('../interfaces/databaseInterface.js');
+const databaseProcess = require('../interfaces/databaseInterface.js');
 const settings = require('../util/settings.js');
 
 /**
@@ -33,7 +33,7 @@ function biDirectionalComponents(
       let source = config.local.path + component;
       let destination = config.remote.path + component;
 
-      if (componentName === settings.components.database) {
+      if (componentName === 'database') {
         if (actionName === 'pull') {
           if (swapSourceAndDestination) {
             [source, destination] = [destination, source];

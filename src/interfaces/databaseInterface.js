@@ -12,8 +12,10 @@ function databaseProcess(direction) {
     const conn = new Client();
     conn
       .on('ready', () => {
+        console.log('SSH connection established');
+
         conn.exec(
-          'wp db export ' + config.remote.path + settings.database.file,
+          `cd ${config.remote.path} && wp db export ${config.remote.path}${settings.database.file}`,
           (err, stream) => {
             if (err) {
               console.error('Error exporting the database:', err);
@@ -21,9 +23,11 @@ function databaseProcess(direction) {
               return;
             }
 
+            console.log('Database export started');
+
             stream
               .on('close', (code, signal) => {
-                console.log('Database exported successfully to database.sql');
+                console.log('Database export completed');
                 conn.end();
                 rsyncPull(
                   config.remote.path + settings.database.file,
@@ -42,9 +46,11 @@ function databaseProcess(direction) {
                     return;
                   }
 
+                  console.log('Database import started');
+
                   stream
                     .on('close', (code, signal) => {
-                      console.log('Database imported successfully');
+                      console.log('Database import completed');
                       conn.end();
 
                       conn.exec(deleteCommand, (err, stream) => {
@@ -56,6 +62,8 @@ function databaseProcess(direction) {
                           conn.end();
                           return;
                         }
+
+                        console.log('Database file deleted');
 
                         stream
                           .on('close', (code, signal) => {
@@ -86,6 +94,12 @@ function databaseProcess(direction) {
               });
           },
         );
+      })
+      .on('error', (err) => {
+        console.error('SSH connection error:', err);
+      })
+      .on('end', () => {
+        console.log('SSH connection closed');
       })
       .connect({
         host,
