@@ -6,6 +6,11 @@ const path = require('path');
 const os = require('os');
 const chalk = require('chalk');
 
+const execOptions = {
+  stdio: 'pipe',
+  maxBuffer: 1024 * 1024 * 10, // 10MB buffer size
+};
+
 /**
  * Pushes files using rsync from a source directory to a destination.
  *
@@ -39,21 +44,17 @@ function rsyncPush(source, destination) {
         commandWithPassword += ` --exclude={${exclude}}`;
       }
 
-      exec(
-        commandWithPassword,
-        { stdio: 'inherit' },
-        (error, stdout, stderr) => {
-          fs.unlinkSync(passwordFilePath);
+      exec(commandWithPassword, execOptions, (error, stdout, stderr) => {
+        fs.unlinkSync(passwordFilePath);
 
-          if (error) {
-            console.error(
-              chalk.red('Error running rsync pull command with password:'),
-              error,
-            );
-            return;
-          }
-        },
-      );
+        if (error) {
+          console.error(
+            chalk.red('Error running rsync pull command with password:'),
+            error,
+          );
+          return;
+        }
+      });
     });
   } else {
     let command = `rsync -avz ${rsyncOptions} ${source} ${actualDestination}`;
@@ -63,7 +64,7 @@ function rsyncPush(source, destination) {
       command += ` --exclude={${exclude}}`;
     }
 
-    exec(command, { stdio: 'inherit' }, (error, stdout, stderr) => {
+    exec(command, execOptions, (error, stdout, stderr) => {
       if (error) {
         console.error(chalk.red('Error running rsync pull command:'), error);
         return;
@@ -104,31 +105,34 @@ function rsyncPull(source, destination) {
 
       const commandWithPassword = `rsync -azv ${rsyncOptions} --password-file=${passwordFilePath} ${actualSource} ${destination}`;
 
-      exec(
-        commandWithPassword,
-        { stdio: 'inherit' },
-        (error, stdout, stderr) => {
-          fs.unlinkSync(passwordFilePath);
+      exec(commandWithPassword, execOptions, (error, stdout, stderr) => {
+        fs.unlinkSync(passwordFilePath);
 
-          if (error) {
-            console.error(
-              chalk.red('Error running rsync pull command with password:'),
-              error,
-            );
-            return;
-          }
-        },
-      );
+        if (error) {
+          console.error(
+            chalk.red('Error running rsync pull command with password:'),
+            error,
+          );
+          return;
+        }
+      });
     });
+    console.log(commandWithPassword);
   } else {
     const command = `rsync -azv ${rsyncOptions} ${actualSource} ${destination}`;
 
-    exec(command, { stdio: 'inherit' }, (error, stdout, stderr) => {
+    exec(command, execOptions, (error, stdout, stderr) => {
       if (error) {
         console.error(chalk.red('Error running rsync pull command:'), error);
         return;
+      } else {
+        if (stdout.length >= execOptions.maxBuffer) {
+          console.log('Stdout maxBuffer length exceeded:', stdout.length);
+        }
       }
     });
+
+    console.log(command);
   }
 
   console.log(chalk.bold('Transporting your assets to your local server:'));

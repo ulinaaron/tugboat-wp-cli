@@ -50,7 +50,11 @@ function biDirectionalComponents(
           [source, destination] = [destination, source];
         }
         if (actionName === 'pull') {
-          rsyncPull(source, config.local.path + settings.content);
+          if (componentName === 'media') {
+            rsyncPull(source, config.local.path);
+          } else {
+            rsyncPull(source, config.local.path + settings.content);
+          }
         } else if (actionName === 'push') {
           rsyncPush(source, config.remote.path + settings.content);
         }

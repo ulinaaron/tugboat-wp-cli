@@ -11,6 +11,7 @@ program
   .description('Pull files from the remote server using rsync')
   .option('-p, --plugins', 'Pull plugins assets')
   .option('-u, --uploads', 'Pull uploads assets')
+  .option('-m, --media', 'Pull media assets')
   .option('-t, --themes', 'Pull themes assets')
   .option('-d, --database', 'Pull database assets')
   .action(async (options) => {
@@ -28,6 +29,9 @@ program
     }
     if (options.uploads) {
       message += ' Pulling uploads assets.';
+    }
+    if (options.media) {
+      message += ' Pulling media assets.';
     }
     if (options.themes) {
       message += ' Pulling themes assets.';
@@ -56,6 +60,7 @@ program
     if (
       !options.plugins &&
       !options.uploads &&
+      !options.media &&
       !options.themes &&
       !options.database
     ) {
@@ -66,6 +71,9 @@ program
       }
       if (options.uploads) {
         components.push(settings.components.uploads);
+      }
+      if (options.media) {
+        components.push(settings.components.media);
       }
       if (options.themes) {
         components.push(settings.components.themes);
