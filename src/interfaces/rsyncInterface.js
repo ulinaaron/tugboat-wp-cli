@@ -58,38 +58,29 @@ function rsyncPush(source, destination) {
       command += ` --password-file=${passwordFilePath}`;
 
       try {
-        executeRsync();
+        executeRsync(
+          command,
+          preActions,
+          userPreActions,
+          postActions,
+          userPostActions,
+        );
       } catch (error) {
         console.error(chalk.red(errorMessage), error);
       }
     });
   } else {
     try {
-      executeRsync();
+      executeRsync(
+        command,
+        preActions,
+        userPreActions,
+        postActions,
+        userPostActions,
+      );
     } catch (error) {
       console.error(chalk.red(errorMessage), error);
     }
-  }
-
-  // TODO: Same function for push and pull. Needs to be refactors to be moved out of current scope.
-  function executeRsync() {
-    exec(command, execOptions, (error, stdout, stderr) => {
-      preActions();
-      // Call the user-defined preActions hook, if provided
-      if (userPreActions && typeof userPreActions === 'function') {
-        userPreActions();
-      }
-
-      if (error) {
-        throw error;
-      }
-
-      postActions();
-      // Call the user-defined postActions hook, if provided
-      if (userPostActions && typeof userPostActions === 'function') {
-        userPostActions();
-      }
-    });
   }
 
   process.nextTick(() => {
@@ -131,44 +122,70 @@ function rsyncPull(source, destination) {
       command += ` --password-file=${passwordFilePath}`;
 
       try {
-        executeRsync();
+        executeRsync(
+          command,
+          preActions,
+          userPreActions,
+          postActions,
+          userPostActions,
+        );
       } catch (error) {
         console.error(chalk.red(errorMessage), error);
       }
     });
   } else {
     try {
-      executeRsync();
+      executeRsync(
+        command,
+        preActions,
+        userPreActions,
+        postActions,
+        userPostActions,
+      );
     } catch (error) {
       console.error(chalk.red(errorMessage), error);
     }
-  }
-
-  // TODO: Same function for push and pull. Needs to be refactors to be moved out of current scope.
-  function executeRsync() {
-    exec(command, execOptions, (error, stdout, stderr) => {
-      preActions();
-      // Call the user-defined preActions hook, if provided
-      if (userPreActions && typeof userPreActions === 'function') {
-        userPreActions();
-      }
-
-      if (error) {
-        throw error;
-      }
-
-      postActions();
-      // Call the user-defined postActions hook, if provided
-      if (userPostActions && typeof userPostActions === 'function') {
-        userPostActions();
-      }
-    });
   }
 
   process.nextTick(() => {
     console.log(chalk.bold('Transporting your assets to your local server:'));
     console.log(chalk.yellow('Source:'), source);
     console.log(chalk.cyan('Destination:'), destination);
+  });
+}
+
+/**
+ * Executes the rsync command with the provided command string and action functions.
+ *
+ * @param {string} command - The rsync command to execute.
+ * @param {function} preActions - The pre-actions to perform before executing the rsync command.
+ * @param {function} userPreActions - The user-defined pre-actions to perform before executing the rsync command.
+ * @param {function} postActions - The post-actions to perform after executing the rsync command.
+ * @param {function} userPostActions - The user-defined post-actions to perform after executing the rsync command.
+ */
+function executeRsync(
+  command,
+  preActions,
+  userPreActions,
+  postActions,
+  userPostActions,
+) {
+  preActions();
+  // Call the user-defined preActions hook, if provided
+  if (userPreActions && typeof userPreActions === 'function') {
+    userPreActions();
+  }
+
+  exec(command, execOptions, (error, stdout, stderr) => {
+    postActions();
+    // Call the user-defined postActions hook, if provided
+    if (userPostActions && typeof userPostActions === 'function') {
+      userPostActions();
+    }
+
+    if (error) {
+      throw error;
+    }
   });
 }
 
