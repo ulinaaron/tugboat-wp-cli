@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 const { program } = require('commander');
 const biDirectionalComponents = require('./controllers/biDirectionalComponents.js');
 const settings = require('./util/settings.js');
@@ -23,19 +21,19 @@ program
       process.exit(1); // Exit the script with a non-zero status code
     }
 
+    const optionsMap = [
+      { option: 'plugins', message: 'Pulling plugins assets.' },
+      { option: 'uploads', message: 'Pulling uploads assets.' },
+      { option: 'themes', message: 'Pulling themes assets.' },
+      { option: 'database', message: 'Pulling database assets.' },
+    ];
+
     let message = 'Are you sure you want to proceed with the pull operation?';
-    if (options.plugins) {
-      message += ' Pulling plugins assets.';
-    }
-    if (options.uploads) {
-      message += ' Pulling uploads assets.';
-    }
-    if (options.themes) {
-      message += ' Pulling themes assets.';
-    }
-    if (options.database) {
-      message += ' Pulling database assets.';
-    }
+    optionsMap.forEach((optionMap) => {
+      if (options[optionMap.option]) {
+        message += ` ${optionMap.message}`;
+      }
+    });
 
     // Confirmation prompt
     const confirm = await inquirer.prompt([
@@ -54,26 +52,14 @@ program
 
     let components = [];
 
-    if (
-      !options.plugins &&
-      !options.uploads &&
-      !options.themes &&
-      !options.database
-    ) {
+    if (optionsMap.every((optionMap) => !options[optionMap.option])) {
       components = Object.values(settings.components);
     } else {
-      if (options.plugins) {
-        components.push(settings.components.plugins);
-      }
-      if (options.uploads) {
-        components.push(settings.components.uploads);
-      }
-      if (options.themes) {
-        components.push(settings.components.themes);
-      }
-      if (options.database) {
-        components.push(settings.components.database);
-      }
+      optionsMap.forEach((optionMap) => {
+        if (options[optionMap.option]) {
+          components.push(settings.components[optionMap.option]);
+        }
+      });
     }
 
     biDirectionalComponents('pull', components, true);
