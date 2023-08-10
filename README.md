@@ -26,7 +26,11 @@ Tugboat WP is a command-line interface (CLI) tool designed to help with the Word
 
 ## Installation
 
+For executing from a project root only:
 `npm install tugboat-wp`
+
+Otherwise to install everywhere:
+`npm install tugboat-wp -g`
 
 ## Roadmap
 
