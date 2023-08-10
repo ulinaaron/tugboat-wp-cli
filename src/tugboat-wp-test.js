@@ -36,6 +36,15 @@ program
       );
     }
 
+    if (config.remote.ssh.password) {
+      console.log(
+        chalk.yellow(
+          chalk.bold('WARNING: ') +
+            'While possible, it is not recommend to use a password for pushing and pulling files. Instead, please consider switching to using an SSH key instead.',
+        ),
+      );
+    }
+
     console.log(chalk.bold('\nAll set to get towing!'));
   });
 
