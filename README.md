@@ -8,7 +8,7 @@
 
 # Tugboat WP CLI
 
-**Not ready for production use quite yet!!! Still very much a work in progress. Only a few pull options work so far.**
+**Not ready for production use quite yet!!! Still very much a work in progress. All push and pull commands work besides database.**
 
 Tugboat WP is a command-line interface (CLI) tool designed to help with the WordPress development process. Push and pull WordPress assets (Plugins, Themes, Uploads, Database) from your local environment to a remote website, and vice versa. All configuration
 
