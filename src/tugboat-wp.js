@@ -11,6 +11,10 @@ program
     'Initialize a Tugboat configuration file in the current directory.',
   )
   .command(
+    'test',
+    'Test your configuration with your local and remote environments without transferring any files.',
+  )
+  .command(
     'pull <option>',
     chalk.yellow.bold('PULL') + ' WordPress assets from remote.',
   )

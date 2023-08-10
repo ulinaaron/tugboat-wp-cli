@@ -4,7 +4,6 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const chalk = require('chalk');
-
 const { removeExtraSpaces } = require('../util/helpers.js');
 
 const config = readConfig();
@@ -24,17 +23,24 @@ let postActions = () => {};
 let userPostActions = null;
 
 /**
- * Pushes files using rsync from a source directory to a destination.
+ * Pushes files from the source directory to the destination directory using rsync.
  *
  * @param {string} source - The path of the source directory.
- * @param {string} destination - The destination directory or 'remote' to push to a remote server.
+ * @param {string} destination - The path of the destination directory.
+ * @param {Array} [flags] - Optional flags for the rsync command.
+ * @return {void} This function does not return a value.
  */
-function rsyncPush(source, destination) {
+async function rsyncPush(source, destination, flags = []) {
   const exclude = config.remote.exclude.join(',');
   const actualDestination = `${config.remote.ssh.user}@${config.remote.ssh.host}:${destination}`;
   const rsyncOptions = config.remote.ssh.rsync_options;
-  let command = `rsync -avz ${rsyncOptions} ${source} ${actualDestination}`;
   let errorMessage = 'Error running rsync push command:';
+  let command = `rsync -avz ${rsyncOptions} ${source} ${actualDestination}`;
+
+  if (flags.length > 0) {
+    const flagsString = flags.join(' ');
+    command += ` ${flagsString}`;
+  }
 
   // Append --exclude flag if there are exclusions
   if (exclude.length > 0) {
@@ -61,7 +67,7 @@ function rsyncPush(source, destination) {
 
       try {
         executeRsync(
-          removeExtraSpaces(command),
+          command,
           preActions,
           userPreActions,
           postActions,
@@ -74,7 +80,7 @@ function rsyncPush(source, destination) {
   } else {
     try {
       executeRsync(
-        removeExtraSpaces(command),
+        command,
         preActions,
         userPreActions,
         postActions,
@@ -90,20 +96,33 @@ function rsyncPush(source, destination) {
     console.log(chalk.yellow('Source:'), source);
     console.log(chalk.cyan('Destination:'), destination);
   });
+
+  await new Promise((resolve) => {
+    setTimeout(() => {
+      // Resolve the promise after the timeout
+      resolve();
+    }, 1000);
+  });
 }
 
 /**
- * rsyncPull is a function that performs a file transfer using the rsync command.
+ * Executes an rsync pull command to copy files from a remote source to a local destination.
  *
- * @param {string} source - the source path of the files to be transferred.
- * @param {string} destination - the destination path where the files will be transferred to.
+ * @param {string} source - The path to the remote source directory.
+ * @param {string} destination - The path to the local destination directory.
+ * @param {Array} flags - Optional flags to customize the rsync command.
+ * @return {void} This function does not return a value.
  */
-function rsyncPull(source, destination) {
+async function rsyncPull(source, destination, flags = []) {
   const actualSource = `${config.remote.ssh.user}@${config.remote.ssh.host}:${source}`;
   const rsyncOptions = config.remote.ssh.rsync_options;
-
-  let command = `rsync -azv ${rsyncOptions} ${actualSource} ${destination}`;
   let errorMessage = 'Error running rsync push command:';
+  let command = `rsync -azv ${rsyncOptions} ${actualSource} ${destination}`;
+
+  if (flags.length > 0) {
+    const flagsString = flags.join(' ');
+    command += ` ${flagsString}`;
+  }
 
   if (config.remote.ssh.password) {
     errorMessage = 'Error running rsync pull command with password:';
@@ -154,6 +173,13 @@ function rsyncPull(source, destination) {
     console.log(chalk.yellow('Source:'), source);
     console.log(chalk.cyan('Destination:'), destination);
   });
+
+  await new Promise((resolve) => {
+    setTimeout(() => {
+      // Resolve the promise after the timeout
+      resolve();
+    }, 1000);
+  });
 }
 
 /**
@@ -178,7 +204,7 @@ function executeRsync(
     userPreActions();
   }
 
-  exec(command, execOptions, (error, stdout, stderr) => {
+  exec(removeExtraSpaces(command), execOptions, (error, stdout, stderr) => {
     postActions();
     // Call the user-defined postActions hook, if provided
     if (userPostActions && typeof userPostActions === 'function') {
