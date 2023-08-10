@@ -18,6 +18,16 @@ Tugboat WP is a command-line interface (CLI) tool designed to help with the Word
 - Easily manage all deployment configurations from a local `tugboat.config.js` file. No need to to enter paths, IPs, and critical deployment details multiple times in the command line.
 - Navigate freely within your local website directory structure in the command-line, Tugboat WP will cascade down your directory structure till it finds the `tugboat.config.js` file.
 
+## Requirements
+
+- rsync
+- node.js
+- sshpass (optional)
+
+## Installation
+
+`npm install tugboat-wp`
+
 ## Roadmap
 
 - [] Optimize code for production release.

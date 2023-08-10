@@ -5,6 +5,8 @@ const path = require('path');
 const os = require('os');
 const chalk = require('chalk');
 
+const { removeExtraSpaces } = require('../util/helpers.js');
+
 const config = readConfig();
 
 const execOptions = {
@@ -55,11 +57,11 @@ function rsyncPush(source, destination) {
         return;
       }
 
-      command += ` --password-file=${passwordFilePath}`;
+      command = `sshpass -f '${passwordFilePath}' ${command}`;
 
       try {
         executeRsync(
-          command,
+          removeExtraSpaces(command),
           preActions,
           userPreActions,
           postActions,
@@ -72,7 +74,7 @@ function rsyncPush(source, destination) {
   } else {
     try {
       executeRsync(
-        command,
+        removeExtraSpaces(command),
         preActions,
         userPreActions,
         postActions,
@@ -119,7 +121,7 @@ function rsyncPull(source, destination) {
         return;
       }
 
-      command += ` --password-file=${passwordFilePath}`;
+      command = `sshpass -f '${passwordFilePath}' ${command}`;
 
       try {
         executeRsync(
