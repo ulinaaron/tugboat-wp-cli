@@ -20,7 +20,6 @@ program
         chalk.bold('Notice:') +
           ' Cannot execute command outside of a WordPress directory.',
       );
-      // eslint-disable-next-line no-undef
       process.exit(1); // Exit the script with a non-zero status code
     }
 
@@ -29,7 +28,6 @@ program
         chalk.bold('Notice:') +
           ' SSHPass could not be detected. Please ensure that sshpass is installed or remove the remote SSH password value from your tugboat.config.js..',
       );
-      // eslint-disable-next-line no-undef
       process.exit(1); // Exit the script with a non-zero status code
     }
 
