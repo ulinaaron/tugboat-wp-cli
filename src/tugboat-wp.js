@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const { program } = require('commander');
 const chalk = require('chalk');
-const getVersion = require('./util/getVersion.js');
+const { getVersion } = require('./util/helpers.js');
 
 program
   .name('tugboat-wp')

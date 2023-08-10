@@ -1,4 +1,15 @@
 /**
+ * Retrieves the version number of the package.
+ *
+ * @return {string} The version number of the package. If not found, returns '0.0.0'.
+ */
+function getVersion() {
+  const packageJson = require('../../package.json');
+  const { version } = packageJson;
+  return version || '0.0.0';
+}
+
+/**
  * Removes extra spaces from a script.
  *
  * @param {string} script - The script to remove extra spaces from.
@@ -32,4 +43,4 @@ function addTrailingSlash(filePath) {
   return filePath;
 }
 
-module.exports = { removeExtraSpaces, addTrailingSlash };
+module.exports = { getVersion, removeExtraSpaces, addTrailingSlash };

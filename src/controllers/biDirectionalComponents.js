@@ -1,4 +1,4 @@
-const { readConfig } = require('../util/readConfig.js');
+const { readConfig } = require('../util/configuration.js');
 const { rsyncPush, rsyncPull } = require('../interfaces/rsyncInterface.js');
 const databaseProcess = require('../interfaces/databaseInterface.js');
 const settings = require('../util/settings.js');

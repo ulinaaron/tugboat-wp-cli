@@ -1,7 +1,7 @@
 const { program } = require('commander');
 const biDirectionalComponents = require('./controllers/biDirectionalComponents.js');
 const settings = require('./util/settings.js');
-const hasConfig = require('./util/hasConfig.js');
+const { hasConfig } = require('./util/configuration.js');
 const checkSSHPass = require('./util/checkSSHPass.js');
 const chalk = require('chalk');
 const inquirer = require('inquirer');

@@ -1,9 +1,10 @@
 const { exec } = require('child_process');
-const { readConfig } = require('../util/readConfig.js');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const chalk = require('chalk');
+
+const { readConfig } = require('../util/configuration.js');
 const { removeExtraSpaces } = require('../util/helpers.js');
 
 const config = readConfig();

@@ -1,6 +1,6 @@
 const { Client } = require('ssh2');
 const { rsyncPull, rsyncPush } = require('./rsyncInterface.js');
-const { readConfig } = require('../util/readConfig.js');
+const { readConfig } = require('../util/configuration.js');
 const settings = require('../util/settings.js');
 
 function databaseProcess(direction) {
@@ -15,7 +15,7 @@ function databaseProcess(direction) {
         console.log('SSH connection established');
 
         conn.exec(
-          `cd ${config.remote.path} && wp db export ${config.remote.path}${settings.database.file}`,
+          `cd ${config.remote.path} && wp db export ${config.remote.path}${settings.settings.components.database}`,
           (err, stream) => {
             if (err) {
               console.error('Error exporting the database:', err);
@@ -30,14 +30,18 @@ function databaseProcess(direction) {
                 console.log('Database export completed');
                 conn.end();
                 rsyncPull(
-                  config.remote.path + settings.database.file,
+                  config.remote.path + settings.settings.components.database,
                   config.local.path,
                 );
 
                 const importCommand =
-                  'wp db import ' + config.local.path + settings.database.file;
+                  'wp db import ' +
+                  config.local.path +
+                  settings.settings.components.database;
                 const deleteCommand =
-                  'rm ' + config.remote.path + settings.database.file;
+                  'rm ' +
+                  config.remote.path +
+                  settings.settings.components.database;
 
                 conn.exec(importCommand, (err, stream) => {
                   if (err) {
