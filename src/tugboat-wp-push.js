@@ -22,20 +22,19 @@ program
       process.exit(1); // Exit the script with a non-zero status code
     }
 
-    let message =
-      'Are you sure you want to proceed with the pushing operation?';
-    if (options.plugins) {
-      message += ' Pushing plugins assets.';
-    }
-    if (options.uploads) {
-      message += ' Pushing uploads assets.';
-    }
-    if (options.themes) {
-      message += ' Pushing themes assets.';
-    }
-    if (options.database) {
-      message += ' Pushing database assets.';
-    }
+    const optionsMap = [
+      { option: 'plugins', message: 'Pushing plugins assets.' },
+      { option: 'uploads', message: 'Pushing uploads assets.' },
+      { option: 'themes', message: 'Pushing themes assets.' },
+      { option: 'database', message: 'Pushing database assets.' },
+    ];
+
+    let message = 'Are you sure you want to proceed with the push operation?';
+    optionsMap.forEach((optionMap) => {
+      if (options[optionMap.option]) {
+        message += ` ${optionMap.message}`;
+      }
+    });
 
     // Confirmation prompt
     const confirm = await inquirer.prompt([
@@ -48,33 +47,20 @@ program
     ]);
 
     if (!confirm.confirmed) {
-      console.log('Pull operation cancelled.');
+      console.log('Push operation cancelled.');
       return;
     }
 
     let components = [];
 
-    if (
-      !options.plugins &&
-      !options.uploads &&
-      !options.themes &&
-      !options.database
-    ) {
+    if (optionsMap.every((optionMap) => !options[optionMap.option])) {
       components = Object.values(settings.components);
     } else {
-      if (options.plugins) {
-        components.push(settings.components.plugins);
-      }
-      if (options.uploads) {
-        components.push(settings.components.uploads);
-      }
-      if (options.themes) {
-        components.push(settings.components.themes);
-      }
-      if (options.database) {
-        // Run WP CLI export command on the source
-        // Import the exported file on the destination
-      }
+      optionsMap.forEach((optionMap) => {
+        if (options[optionMap.option]) {
+          components.push(settings.components[optionMap.option]);
+        }
+      });
     }
 
     biDirectionalComponents('push', components, false);
