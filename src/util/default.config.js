@@ -1,26 +1,15 @@
 module.exports = {
   local: {
-    host: 'https://example.test',
-    path: '/Users/name/website/public_html/',
-    database: {
-      name: 'local',
-      user: 'root',
-      password: 'root',
-      host: 'localhost',
-      port: 3306,
-    },
+    // Local host configuration
+    host: 'https://example.test', // The local host URL
+    path: '/Users/name/website/public_html/', // The local path to the website files
   },
   remote: {
-    host: 'https://example.com',
-    path: '/home/master/applications/website/public_html/',
-    database: {
-      name: 'remote',
-      user: 'root',
-      password: 'root',
-      host: 'localhost',
-      port: 3306,
-    },
+    // Remote host configuration
+    host: 'https://example.com', // The remote host URL
+    path: '/home/master/applications/website/public_html/', // The remote path to the website files
     exclude: [
+      // Directories and files to exclude from synchronization
       'node_modules',
       'bower_components',
       '.git',
@@ -31,11 +20,12 @@ module.exports = {
       'tmp',
     ],
     ssh: {
-      host: 'example.com',
-      user: 'root',
-      password: '',
-      port: 22,
-      rsync_options: '--verbose --itemize-changes',
+      // SSH configuration for remote host
+      host: 'example.com', // The SSH host
+      user: 'root', // The SSH user
+      password: '', // The SSH password (leave empty for key-based authentication)
+      port: 22, // The SSH port
+      rsync_options: '--verbose --itemize-changes', // Additional rsync options for synchronization
     },
   },
 };
