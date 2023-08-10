@@ -2,6 +2,7 @@ const { program } = require('commander');
 const { readConfig } = require('./util/readConfig.js');
 const { rsyncPush, rsyncPull } = require('./interfaces/rsyncInterface.js');
 const { addTrailingSlash } = require('./util/helpers.js');
+const chalk = require('chalk');
 
 const config = readConfig();
 
@@ -14,20 +15,28 @@ program
   )
   .action(async (options) => {
     try {
-      console.log('Executing rsyncPull to copy files from remote to local:');
+      console.log('Testing pulling files from remote to local:');
       await rsyncPull(remotePath, localPath, ['--dry-run']);
-      console.log('✔ Pull completed successfully\n');
+      console.log(chalk.bgGreen.white.bold('✔ Pull completed successfully\n'));
     } catch (error) {
-      console.log('❌ Pull encountered an error:', error);
+      console.log(
+        chalk.bgRed.white.bold('❌ Pull encountered an error:'),
+        error,
+      );
     }
 
     try {
-      console.log('Executing rsyncPush to copy files from local to remote:');
+      console.log('Testing pushing files to remote from local:');
       await rsyncPush(localPath, remotePath, ['--dry-run']);
-      console.log('✔ Push completed successfully\n');
+      console.log(chalk.bgGreen.white.bold('✔ Push completed successfully\n'));
     } catch (error) {
-      console.log('❌ Push encountered an error:', error);
+      console.log(
+        chalk.bgRed.white.bold('❌ Push encountered an error:'),
+        error,
+      );
     }
+
+    console.log(chalk.bold('\nAll set to get towing!'));
   });
 
 program.parse(process.argv);
