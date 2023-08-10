@@ -3,7 +3,8 @@
 const { program } = require('commander');
 const biDirectionalComponents = require('./controllers/biDirectionalComponents.js');
 const settings = require('./util/settings.js');
-const check = require('./util/check.js');
+const hasConfig = require('./util/hasConfig.js');
+const checkSSHPass = require('./util/checkSSHPass.js');
 const chalk = require('chalk');
 const inquirer = require('inquirer');
 
@@ -14,11 +15,21 @@ program
   .option('-t, --themes', 'Push themes assets')
   .option('-d, --database', 'Push database assets')
   .action(async (options) => {
-    if (!check()) {
+    if (!hasConfig()) {
       console.error(
         chalk.bold('Notice:') +
           ' Cannot execute command outside of a WordPress directory.',
       );
+      // eslint-disable-next-line no-undef
+      process.exit(1); // Exit the script with a non-zero status code
+    }
+
+    if (!checkSSHPass()) {
+      console.error(
+        chalk.bold('Notice:') +
+          ' SSHPass could not be detected. Please ensure that sshpass is installed or remove the remote SSH password value from your tugboat.config.js..',
+      );
+      // eslint-disable-next-line no-undef
       process.exit(1); // Exit the script with a non-zero status code
     }
 

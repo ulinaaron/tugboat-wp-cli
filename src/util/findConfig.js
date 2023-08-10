@@ -10,6 +10,7 @@ const path = require('path');
  */
 function findConfigPath(startPath, filename) {
   let currentPath = startPath;
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     const configPath = path.join(currentPath, filename);
     if (fs.existsSync(configPath)) {

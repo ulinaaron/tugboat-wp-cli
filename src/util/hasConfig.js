@@ -1,8 +1,7 @@
 const chalk = require('chalk');
 const findConfigPath = require('./findConfig.js');
-function isWordPressDirectory() {
+function hasConfig() {
   const fs = require('fs');
-  const path = require('path');
 
   // Check if the current directory contains a tugboat.config.js file
   const configPath = findConfigPath(process.cwd(), 'tugboat.config.js');
@@ -31,4 +30,4 @@ function isWordPressDirectory() {
   return true;
 }
 
-module.exports = isWordPressDirectory;
+module.exports = hasConfig;
