@@ -2,6 +2,7 @@ const { readConfig } = require('../util/readConfig.js');
 const { rsyncPush, rsyncPull } = require('../interfaces/rsyncInterface.js');
 const databaseProcess = require('../interfaces/databaseInterface.js');
 const settings = require('../util/settings.js');
+const { addTrailingSlash } = require('../util/helpers.js');
 
 /**
  * Executes the specified action on a list of components.
@@ -28,10 +29,12 @@ function biDirectionalComponents(
     const componentName = Object.keys(settings.components).find(
       (key) => settings.components[key] === component,
     );
+    const localPath = addTrailingSlash(config.local.path);
+    const remotePath = addTrailingSlash(config.remote.path);
 
     if (componentName) {
-      let source = config.local.path + component;
-      let destination = config.remote.path + component;
+      let source = localPath + component;
+      let destination = remotePath + component;
 
       if (componentName === 'database') {
         if (actionName === 'pull') {
@@ -51,12 +54,12 @@ function biDirectionalComponents(
         }
         if (actionName === 'pull') {
           if (componentName === 'media') {
-            rsyncPull(source, config.local.path);
+            rsyncPull(source, localPath);
           } else {
-            rsyncPull(source, config.local.path + settings.content);
+            rsyncPull(source, localPath + settings.content);
           }
         } else if (actionName === 'push') {
-          rsyncPush(source, config.remote.path + settings.content);
+          rsyncPush(source, remotePath + settings.content);
         }
       }
     } else {

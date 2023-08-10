@@ -19,4 +19,17 @@ function removeExtraSpaces(script) {
   return filteredScript;
 }
 
-module.exports = { removeExtraSpaces };
+/**
+ * Adds a trailing slash to the given file path if it doesn't already have one and doesn't include a file extension.
+ *
+ * @param {string} filePath - The file path to add a trailing slash to.
+ * @return {string} The file path with a trailing slash added if necessary.
+ */
+function addTrailingSlash(filePath) {
+  if (!filePath.endsWith('/') && !filePath.includes('.')) {
+    filePath += '/';
+  }
+  return filePath;
+}
+
+module.exports = { removeExtraSpaces, addTrailingSlash };
