@@ -1,12 +1,13 @@
 const { spawn } = require('child_process');
 const { Client } = require('ssh2');
-const { rsyncPull, rsyncPush } = require('./rsync.js');
-const { readConfig } = require('./configuration.js');
-const settings = require('./settings.js');
+
+const { rsyncPull, rsyncPush } = require('./assetSync.js');
+const { readConfig } = require('../util/configuration.js');
+const settings = require('../util/settings.js');
 
 const config = readConfig();
 
-async function databaseProcess(direction) {
+async function databaseSync(direction) {
   const { host, user, password, port } = config.remote.ssh;
 
   const connectOptions = {
@@ -86,4 +87,4 @@ function importDatabase() {
   });
 }
 
-module.exports = databaseProcess;
+module.exports = databaseSync;

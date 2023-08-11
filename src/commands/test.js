@@ -3,7 +3,7 @@ const {
   hasConfig,
   isValidConfig,
 } = require('../util/configuration.js');
-const { rsyncPush, rsyncPull } = require('../util/rsync.js');
+const { rsyncPush, rsyncPull } = require('../controllers/assetSync.js');
 const { addTrailingSlash } = require('../util/helpers.js');
 const checkSSHPass = require('../util/checkSSHPass.js');
 const chalk = require('chalk');

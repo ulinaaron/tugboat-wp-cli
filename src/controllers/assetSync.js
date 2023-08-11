@@ -4,8 +4,8 @@ const path = require('path');
 const os = require('os');
 const chalk = require('chalk');
 
-const { readConfig } = require('./configuration.js');
-const { removeExtraSpaces } = require('./helpers.js');
+const { readConfig } = require('../util/configuration.js');
+const { removeExtraSpaces } = require('../util/helpers.js');
 
 const config = readConfig();
 

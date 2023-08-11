@@ -1,4 +1,4 @@
-const wpAssetActions = require('../controllers/wpAssetActions.js');
+const wpAssetActions = require('../controllers/assetActions.js');
 const settings = require('../util/settings.js');
 const { hasConfig } = require('../util/configuration.js');
 const checkSSHPass = require('../util/checkSSHPass.js');

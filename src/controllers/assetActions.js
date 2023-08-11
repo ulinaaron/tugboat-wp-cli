@@ -1,6 +1,6 @@
+const { rsyncPush, rsyncPull } = require('./assetSync.js');
+const databaseSync = require('./dbSync.js');
 const { readConfig } = require('../util/configuration.js');
-const { rsyncPush, rsyncPull } = require('../util/rsync.js');
-const databaseProcess = require('../util/databaseProcess.js');
 const settings = require('../util/settings.js');
 const { addTrailingSlash } = require('../util/helpers.js');
 
@@ -41,12 +41,12 @@ function wpAssetActions(
           if (swapSourceAndDestination) {
             [source, destination] = [destination, source];
           }
-          databaseProcess('pull');
+          databaseSync('pull');
         } else if (actionName === 'push') {
           if (swapSourceAndDestination) {
             [source, destination] = [destination, source];
           }
-          databaseProcess('push');
+          databaseSync('push');
         }
       } else {
         if (swapSourceAndDestination) {
