@@ -75,11 +75,6 @@ function readConfig() {
   try {
     const configPath = findConfigPath(process.cwd(), 'tugboat.config.js');
     if (!configPath) {
-      console.error(
-        chalk.red(
-          'Error: tugboat.config.js not found in the current directory or its parent directories.',
-        ),
-      );
       return null;
     }
 
