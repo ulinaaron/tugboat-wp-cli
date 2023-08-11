@@ -4,9 +4,9 @@
   "scripts": {
     "start": "npm run build && npm run link && npm run watch",
     "lint": "npx eslint ./src",
-    "build": "npx babel src --delete-dir-on-start --out-dir lib",
-    "watch": "npx babel src --delete-dir-on-start --out-dir lib --watch",
-    "clean": "rm -rf ./lib",
+    "build": "npx babel src --delete-dir-on-start --out-dir bin",
+    "watch": "npx babel src --delete-dir-on-start --out-dir bin --watch",
+    "clean": "rm -rf ./bin",
     "link": "npm link",
     "unlink": "npm unlink tugboat-wp",
     "setup": "npm run build && npm run link",
@@ -47,16 +47,16 @@
     ]
   },
   "bin": {
-    "tugboat-wp": "./lib/tugboat-wp.js",
-    "tugboat-wp-init": "./lib/tugboat-wp-init.js",
-    "tugboat-wp-push": "./lib/tugboat-wp-push.js",
-    "tugboat-wp-pull": "./lib/tugboat-wp-pull.js",
-    "tugboat-wp-test": "./lib/tugboat-wp-test.js"
+    "tugboat-wp": "./bin/tugboat-wp.js",
+    "tugboat-wp-init": "./bin/tugboat-wp-init.js",
+    "tugboat-wp-push": "./bin/tugboat-wp-push.js",
+    "tugboat-wp-pull": "./bin/tugboat-wp-pull.js",
+    "tugboat-wp-test": "./bin/tugboat-wp-test.js"
   },
   "engines": {
     "node": ">=16.0.0"
   },
   "files": [
-    "lib/"
+    "bin/"
   ]
 }
