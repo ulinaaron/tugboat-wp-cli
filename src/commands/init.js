@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const inquirer = require('inquirer');
 const chalk = require('chalk');
-const { copyDefaultConfig } = require('../util/configuration');
+const { copyDefaultConfig } = require('../util/configuration.js');
 
 const CURRENT_DIR = process.cwd();
 
