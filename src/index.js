@@ -1,5 +1,7 @@
 #!/usr/bin/env node
-const { program } = require('commander');
+const { Command } = require('commander');
+const program = new Command();
+
 const chalk = require('chalk');
 const { getVersion } = require('./util/helpers.js');
 
@@ -8,7 +10,12 @@ const testCommand = require('./commands/test.js');
 const pullCommand = require('./commands/pull.js');
 const pushCommand = require('./commands/push.js');
 
-program.name('tugboat-wp').version(chalk.yellow(getVersion()));
+program
+  .name('tugboat-wp')
+  .description(
+    'Tugboat WP is a command-line interface (CLI) tool designed to help with the WordPress development process.',
+  )
+  .version(chalk.yellow(getVersion()));
 
 program
   .command('init')
@@ -16,7 +23,7 @@ program
     'Initialize a Tugboat configuration file in the current directory.',
   )
   .action(() => {
-    initCommand;
+    initCommand();
   });
 
 program
