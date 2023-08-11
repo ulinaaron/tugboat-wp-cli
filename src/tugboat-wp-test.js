@@ -1,6 +1,6 @@
 const { program } = require('commander');
 const { readConfig, hasConfig } = require('./util/configuration.js');
-const { rsyncPush, rsyncPull } = require('./interfaces/rsyncInterface.js');
+const { rsyncPush, rsyncPull } = require('./util/rsync.js');
 const { addTrailingSlash } = require('./util/helpers.js');
 const checkSSHPass = require('./util/checkSSHPass.js');
 const chalk = require('chalk');

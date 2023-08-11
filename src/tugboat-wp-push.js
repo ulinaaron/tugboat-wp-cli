@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const { program } = require('commander');
-const biDirectionalComponents = require('./controllers/biDirectionalComponents.js');
+const wpAssetActions = require('./controllers/wpAssetActions.js');
 const settings = require('./util/settings.js');
 const { hasConfig } = require('./util/configuration.js');
 const checkSSHPass = require('./util/checkSSHPass.js');
@@ -72,7 +72,7 @@ program
       });
     }
 
-    biDirectionalComponents('push', components, false);
+    wpAssetActions('push', components, false);
   });
 
 program.parse(process.argv);

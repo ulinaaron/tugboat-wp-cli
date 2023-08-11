@@ -1,8 +1,8 @@
 const { spawn } = require('child_process');
 const { Client } = require('ssh2');
-const { rsyncPull, rsyncPush } = require('./rsyncInterface.js');
-const { readConfig } = require('../util/configuration.js');
-const settings = require('../util/settings.js');
+const { rsyncPull, rsyncPush } = require('./rsync.js');
+const { readConfig } = require('./configuration.js');
+const settings = require('./settings.js');
 
 const config = readConfig();
 

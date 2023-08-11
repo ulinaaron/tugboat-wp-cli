@@ -1,6 +1,6 @@
 const { readConfig } = require('../util/configuration.js');
-const { rsyncPush, rsyncPull } = require('../interfaces/rsyncInterface.js');
-const databaseProcess = require('../interfaces/databaseInterface.js');
+const { rsyncPush, rsyncPull } = require('../util/rsync.js');
+const databaseProcess = require('../util/databaseProcess.js');
 const settings = require('../util/settings.js');
 const { addTrailingSlash } = require('../util/helpers.js');
 
@@ -11,7 +11,7 @@ const { addTrailingSlash } = require('../util/helpers.js');
  * @param {Array} components - The list of components to perform the action on.
  * @return {void}
  */
-function biDirectionalComponents(
+function wpAssetActions(
   actionName,
   components,
   swapSourceAndDestination = false,
@@ -68,4 +68,4 @@ function biDirectionalComponents(
   });
 }
 
-module.exports = biDirectionalComponents;
+module.exports = wpAssetActions;

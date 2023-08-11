@@ -1,5 +1,5 @@
 const { program } = require('commander');
-const biDirectionalComponents = require('./controllers/biDirectionalComponents.js');
+const wpAssetActions = require('./controllers/wpAssetActions.js');
 const settings = require('./util/settings.js');
 const { hasConfig } = require('./util/configuration.js');
 const checkSSHPass = require('./util/checkSSHPass.js');
@@ -73,7 +73,7 @@ program
       });
     }
 
-    biDirectionalComponents('pull', components, true);
+    wpAssetActions('pull', components, true);
   });
 
 program.parse(process.argv);
