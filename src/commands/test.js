@@ -1,4 +1,8 @@
-const { readConfig, hasConfig } = require('../util/configuration.js');
+const {
+  readConfig,
+  hasConfig,
+  isValidConfig,
+} = require('../util/configuration.js');
 const { rsyncPush, rsyncPull } = require('../util/rsync.js');
 const { addTrailingSlash } = require('../util/helpers.js');
 const checkSSHPass = require('../util/checkSSHPass.js');
@@ -25,6 +29,15 @@ async function testCommand() {
 
   const localPath = addTrailingSlash(config.local.path);
   const remotePath = addTrailingSlash(config.remote.path);
+
+  if (!isValidConfig(config)) {
+    console.error(`
+    ${chalk.bold('Notice:')} Invalid configuration in tugboat.config.js file.
+    If you have just initialized your configuraiton file, be sure to change the default values.
+    `);
+
+    process.exit(1); // Exit the script with a non-zero status code
+  }
 
   try {
     console.log('Testing pulling files from remote to local:');

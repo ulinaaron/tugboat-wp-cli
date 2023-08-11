@@ -111,4 +111,55 @@ function copyDefaultConfig() {
   });
 }
 
-module.exports = { findConfigPath, hasConfig, readConfig, copyDefaultConfig };
+/**
+ * Checks if a given configuration object is valid.
+ *
+ * @param {Object} config - The configuration object to validate.
+ * @return {boolean} Returns true if the config is valid, false otherwise.
+ */
+function isValidConfig(config) {
+  if (!config || typeof config !== 'object') {
+    return false;
+  }
+
+  const { local, remote } = config;
+
+  // Validate local host configuration
+  if (!local || typeof local !== 'object' || !local.host || !local.path) {
+    return false;
+  }
+
+  // Validate remote host configuration
+  if (
+    !remote ||
+    typeof remote !== 'object' ||
+    !remote.host ||
+    !remote.path ||
+    !remote.exclude ||
+    !Array.isArray(remote.exclude)
+  ) {
+    return false;
+  }
+
+  // Ensure that the default example host and paths are not used
+  const defaultHost = 'https://example.test';
+  const defaultPath = '/Users/name/website/public_html/';
+  if (
+    local.host === defaultHost ||
+    local.path === defaultPath ||
+    remote.host === defaultHost ||
+    remote.path === defaultPath
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
+module.exports = {
+  findConfigPath,
+  hasConfig,
+  readConfig,
+  copyDefaultConfig,
+  isValidConfig,
+};
