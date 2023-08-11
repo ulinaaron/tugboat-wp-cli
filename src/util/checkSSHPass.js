@@ -1,5 +1,5 @@
 const { execSync } = require('child_process');
-const { readConfig } = require('./readConfig.js');
+const { readConfig } = require('./configuration.js');
 const config = readConfig();
 
 /**

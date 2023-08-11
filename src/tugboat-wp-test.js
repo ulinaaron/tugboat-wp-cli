@@ -1,8 +1,7 @@
 const { program } = require('commander');
-const { readConfig } = require('./util/readConfig.js');
+const { readConfig, hasConfig } = require('./util/configuration.js');
 const { rsyncPush, rsyncPull } = require('./interfaces/rsyncInterface.js');
 const { addTrailingSlash } = require('./util/helpers.js');
-const hasConfig = require('./util/hasConfig.js');
 const checkSSHPass = require('./util/checkSSHPass.js');
 const chalk = require('chalk');
 
@@ -37,7 +36,7 @@ program
 
     try {
       console.log('Testing pulling files from remote to local:');
-      await rsyncPull(remotePath, localPath, ['--dry-run']);
+      await rsyncPull(remotePath, localPath, ['--dry-run --quiet']);
       console.log(chalk.bgGreen.white.bold('✔ Pull completed successfully\n'));
     } catch (error) {
       console.log(
@@ -48,7 +47,7 @@ program
 
     try {
       console.log('Testing pushing files to remote from local:');
-      await rsyncPush(localPath, remotePath, ['--dry-run']);
+      await rsyncPush(localPath, remotePath, ['--dry-run --quiet']);
       console.log(chalk.bgGreen.white.bold('✔ Push completed successfully\n'));
     } catch (error) {
       console.log(
