@@ -1,4 +1,4 @@
-const { exec } = require('child_process');
+const { exec, spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
@@ -8,11 +8,6 @@ const { readConfig } = require('../util/configuration.js');
 const { removeExtraSpaces } = require('../util/helpers.js');
 
 const config = readConfig();
-
-const execOptions = {
-  stdio: 'pipe',
-  maxBuffer: 1024 * 1024 * 10, // 10MB buffer size
-};
 
 const password = config.remote.ssh.password || null;
 const tmpFolderPath = fs.mkdtempSync(path.join(os.tmpdir(), 'rsync-'));
@@ -67,7 +62,7 @@ async function rsyncPush(source, destination, flags = []) {
       command = `sshpass -f '${passwordFilePath}' ${command}`;
 
       try {
-        executeRsync(
+        spawnRsync(
           command,
           preActions,
           userPreActions,
@@ -80,7 +75,7 @@ async function rsyncPush(source, destination, flags = []) {
     });
   } else {
     try {
-      executeRsync(
+      spawnRsync(
         command,
         preActions,
         userPreActions,
@@ -144,7 +139,7 @@ async function rsyncPull(source, destination, flags = []) {
       command = `sshpass -f '${passwordFilePath}' ${command}`;
 
       try {
-        executeRsync(
+        spawnRsync(
           command,
           preActions,
           userPreActions,
@@ -157,7 +152,7 @@ async function rsyncPull(source, destination, flags = []) {
     });
   } else {
     try {
-      executeRsync(
+      spawnRsync(
         command,
         preActions,
         userPreActions,
@@ -192,7 +187,7 @@ async function rsyncPull(source, destination, flags = []) {
  * @param {function} postActions - The post-actions to perform after executing the rsync command.
  * @param {function} userPostActions - The user-defined post-actions to perform after executing the rsync command.
  */
-function executeRsync(
+function spawnRsync(
   command,
   preActions,
   userPreActions,
@@ -205,15 +200,25 @@ function executeRsync(
     userPreActions();
   }
 
-  exec(removeExtraSpaces(command), execOptions, (error, stdout, stderr) => {
+  const rsync = spawn('sh', ['-c', removeExtraSpaces(command)]);
+
+  rsync.stdout.on('data', (data) => {
+    console.log(data.toString());
+  });
+
+  rsync.stderr.on('data', (data) => {
+    console.error(data.toString());
+  });
+
+  rsync.on('close', (code) => {
     postActions();
     // Call the user-defined postActions hook, if provided
     if (userPostActions && typeof userPostActions === 'function') {
       userPostActions();
     }
 
-    if (error) {
-      throw error;
+    if (code !== 0) {
+      throw new Error(`rsync process exited with code ${code}`);
     }
   });
 }
