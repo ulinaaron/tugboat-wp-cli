@@ -93,4 +93,27 @@ function readConfig() {
   }
 }
 
-module.exports = { findConfigPath, hasConfig, readConfig };
+/**
+ * Copies the default configuration file to the current directory.
+ *
+ * @param {string} DEFAULT_CONFIG_PATH - The path of the default configuration file.
+ * @param {string} CURRENT_DIR - The current working directory.
+ * @param {string} destinationPath - The path where the configuration file will be copied to.
+ * @param {function} callback - The callback function to be executed after the file is copied.
+ * @return {void}
+ */
+function copyDefaultConfig() {
+  const DEFAULT_CONFIG_PATH = path.join(__dirname, './default.config.js');
+  const CURRENT_DIR = process.cwd();
+  const destinationPath = path.join(CURRENT_DIR, 'tugboat.config.js');
+
+  fs.copyFile(DEFAULT_CONFIG_PATH, destinationPath, (err) => {
+    if (err) {
+      console.error(chalk.red(`Error copying default.config.js: ${err}`));
+    } else {
+      console.log(chalk.green('tugboat.config.js created successfully!'));
+    }
+  });
+}
+
+module.exports = { findConfigPath, hasConfig, readConfig, copyDefaultConfig };

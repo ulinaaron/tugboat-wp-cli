@@ -1,14 +1,12 @@
-#!/usr/bin/env node
-const { program } = require('commander');
 const fs = require('fs');
 const path = require('path');
 const inquirer = require('inquirer');
 const chalk = require('chalk');
+const { copyDefaultConfig } = require('../util/configuration');
 
-const DEFAULT_CONFIG_PATH = path.join(__dirname, './util/default.config.js');
 const CURRENT_DIR = process.cwd();
 
-program.action(() => {
+function initCommand() {
   const destinationPath = path.join(CURRENT_DIR, 'tugboat.config.js');
 
   if (fs.existsSync(destinationPath)) {
@@ -33,18 +31,6 @@ program.action(() => {
   } else {
     copyDefaultConfig();
   }
-});
-
-program.parse(process.argv);
-
-function copyDefaultConfig() {
-  const destinationPath = path.join(CURRENT_DIR, 'tugboat.config.js');
-
-  fs.copyFile(DEFAULT_CONFIG_PATH, destinationPath, (err) => {
-    if (err) {
-      console.error(chalk.red(`Error copying default.config.js: ${err}`));
-    } else {
-      console.log(chalk.green('tugboat.config.js created successfully!'));
-    }
-  });
 }
+
+module.exports = initCommand;
