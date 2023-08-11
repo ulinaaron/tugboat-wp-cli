@@ -3,7 +3,7 @@ const {
   hasConfig,
   isValidConfig,
 } = require('../util/configuration.js');
-const { rsyncPush, rsyncPull } = require('../controllers/assetSync.js');
+const { assetPush, assetPull } = require('../controllers/assetSync.js');
 const { addTrailingSlash } = require('../util/helpers.js');
 const checkSSHPass = require('../util/checkSSHPass.js');
 const chalk = require('chalk');
@@ -41,7 +41,7 @@ async function testCommand() {
 
   try {
     console.log('Testing pulling files from remote to local:');
-    await rsyncPull(remotePath, localPath, ['--dry-run --quiet']);
+    await assetPull(remotePath, localPath, ['--dry-run --quiet']);
     console.log(chalk.bgGreen.white.bold('✔ Pull completed successfully\n'));
   } catch (error) {
     console.log(chalk.bgRed.white.bold('❌ Pull encountered an error:'), error);
@@ -49,7 +49,7 @@ async function testCommand() {
 
   try {
     console.log('Testing pushing files to remote from local:');
-    await rsyncPush(localPath, remotePath, ['--dry-run --quiet']);
+    await assetPush(localPath, remotePath, ['--dry-run --quiet']);
     console.log(chalk.bgGreen.white.bold('✔ Push completed successfully\n'));
   } catch (error) {
     console.log(chalk.bgRed.white.bold('❌ Push encountered an error:'), error);

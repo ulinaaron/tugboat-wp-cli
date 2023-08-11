@@ -22,7 +22,7 @@ let userPostActions = null;
  * @param {Array} [flags] - Optional flags for the rsync command.
  * @return {void} This function does not return a value.
  */
-async function rsyncPush(source, destination, flags = []) {
+async function assetPush(source, destination, flags = []) {
   const exclude = config.remote.exclude.join(',');
   const actualDestination = `${config.remote.ssh.user}@${config.remote.ssh.host}:${destination}`;
   const rsyncOptions = config.remote.ssh.rsync_options;
@@ -109,7 +109,7 @@ async function rsyncPush(source, destination, flags = []) {
  * @param {Array} flags - Optional flags to customize the rsync command.
  * @return {void} This function does not return a value.
  */
-async function rsyncPull(source, destination, flags = []) {
+async function assetPull(source, destination, flags = []) {
   const actualSource = `${config.remote.ssh.user}@${config.remote.ssh.host}:${source}`;
   const rsyncOptions = config.remote.ssh.rsync_options;
   let errorMessage = 'Error running rsync push command:';
@@ -228,6 +228,6 @@ function spawnRsync(
 }
 
 module.exports = {
-  rsyncPush,
-  rsyncPull,
+  assetPush,
+  assetPull,
 };

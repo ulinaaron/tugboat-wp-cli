@@ -1,4 +1,4 @@
-const { rsyncPush, rsyncPull } = require('./assetSync.js');
+const { assetPush, assetPull } = require('./assetSync.js');
 const databaseSync = require('./dbSync.js');
 const { readConfig } = require('../util/configuration.js');
 const settings = require('../util/settings.js');
@@ -54,12 +54,12 @@ function wpAssetActions(
         }
         if (actionName === 'pull') {
           if (componentName === 'media') {
-            rsyncPull(source, localPath);
+            assetPull(source, localPath);
           } else {
-            rsyncPull(source, localPath + settings.content);
+            assetPull(source, localPath + settings.content);
           }
         } else if (actionName === 'push') {
-          rsyncPush(source, remotePath + settings.content);
+          assetPush(source, remotePath + settings.content);
         }
       }
     } else {

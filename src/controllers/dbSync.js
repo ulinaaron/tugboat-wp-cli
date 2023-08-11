@@ -1,12 +1,19 @@
 const { spawn } = require('child_process');
 const { Client } = require('ssh2');
 
-const { rsyncPull, rsyncPush } = require('./assetSync.js');
+const getDatabaseAdapter = require('./dbAdapters.js');
+const { assetPull, assetPush } = require('./assetSync.js');
 const { readConfig } = require('../util/configuration.js');
 const settings = require('../util/settings.js');
 
 const config = readConfig();
 
+/**
+ * Asynchronously synchronizes the database.
+ *
+ * @param {string} direction - The direction of the synchronization (either 'pull' or 'push').
+ * @return {Promise<void>} - A promise that resolves once the synchronization is complete.
+ */
 async function databaseSync(direction) {
   const { host, user, password, port } = config.remote.ssh;
 
@@ -19,6 +26,15 @@ async function databaseSync(direction) {
   if (password !== null) {
     connectOptions.password = password;
   }
+
+  const { adapter: localAdapter } = config.local.database;
+  const { adapter: remoteAdapter } = config.remote.database;
+
+  const databaseAdapter = getDatabaseAdapter(
+    direction,
+    localAdapter,
+    remoteAdapter,
+  );
 
   if (direction === 'pull') {
     const conn = new Client();
@@ -48,7 +64,7 @@ async function databaseSync(direction) {
                 console.log('Database export completed');
                 conn.end();
 
-                rsyncPull(
+                assetPull(
                   config.remote.path + settings.components.database,
                   config.local.path,
                 );
