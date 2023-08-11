@@ -9,10 +9,6 @@ const { removeExtraSpaces } = require('./helpers.js');
 
 const config = readConfig();
 
-const password = config.remote.ssh.password || null;
-const tmpFolderPath = fs.mkdtempSync(path.join(os.tmpdir(), 'rsync-'));
-const passwordFilePath = path.join(tmpFolderPath, 'password.txt');
-
 let preActions = () => {};
 let userPreActions = null;
 let postActions = () => {};
@@ -32,6 +28,10 @@ async function rsyncPush(source, destination, flags = []) {
   const rsyncOptions = config.remote.ssh.rsync_options;
   let errorMessage = 'Error running rsync push command:';
   let command = `rsync -avz ${rsyncOptions} ${source} ${actualDestination}`;
+
+  const password = config.remote.ssh.password || null;
+  const tmpFolderPath = fs.mkdtempSync(path.join(os.tmpdir(), 'rsync-'));
+  const passwordFilePath = path.join(tmpFolderPath, 'password.txt');
 
   if (flags.length > 0) {
     const flagsString = flags.join(' ');
@@ -114,6 +114,10 @@ async function rsyncPull(source, destination, flags = []) {
   const rsyncOptions = config.remote.ssh.rsync_options;
   let errorMessage = 'Error running rsync push command:';
   let command = `rsync -azv ${rsyncOptions} ${actualSource} ${destination}`;
+
+  const password = config.remote.ssh.password || null;
+  const tmpFolderPath = fs.mkdtempSync(path.join(os.tmpdir(), 'rsync-'));
+  const passwordFilePath = path.join(tmpFolderPath, 'password.txt');
 
   if (flags.length > 0) {
     const flagsString = flags.join(' ');
