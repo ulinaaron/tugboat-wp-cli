@@ -33,6 +33,7 @@ async function assetPush(source, destination, flags = []) {
   const tmpFolderPath = fs.mkdtempSync(path.join(os.tmpdir(), 'rsync-'));
   const passwordFilePath = path.join(tmpFolderPath, 'password.txt');
 
+  // Append --flags flag
   if (flags.length > 0) {
     const flagsString = flags.join(' ');
     command += ` ${flagsString}`;
@@ -43,6 +44,7 @@ async function assetPush(source, destination, flags = []) {
     command += ` --exclude={${exclude}}`;
   }
 
+  // Append --password-file flag if there is a password
   if (config.remote.ssh.password) {
     errorMessage = 'Error running rsync push command with password:';
     preActions = () => {
