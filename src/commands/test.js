@@ -5,7 +5,7 @@ const {
 } = require('../util/configuration.js');
 const { assetPush, assetPull } = require('../controllers/assetSync.js');
 const { addTrailingSlash } = require('../util/helpers.js');
-const checkSSHPass = require('../util/checkSSHPass.js');
+const { checkSSHPass } = require('../util/ssh.js');
 const chalk = require('chalk');
 
 async function testCommand() {

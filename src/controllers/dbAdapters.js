@@ -1,8 +1,6 @@
-const config = readConfig();
-
-const { WPCLIAdapter } = require('../adapters/wp-cli.js');
-const { MySQLAdapter } = require('../adapters/mysql.js');
-const { LocalWPAdapter } = require('../adapters/localwp.js');
+const { WPCLIAdapter } = require('./adapters/wp-cli.js');
+const { MySQLAdapter } = require('./adapters/mysql.js');
+const { LocalWPAdapter } = require('./adapters/localwp.js');
 
 /**
  * Returns the appropriate database adapter based on the given parameters.

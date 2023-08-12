@@ -23,7 +23,7 @@ function isSshpassInstalled() {
  * @param {Object} config - The configuration object.
  * @return {void} - This function does not return anything.
  */
-module.exports = function checkSSHPass() {
+function checkSSHPass() {
   if (config.remote.ssh.password) {
     if (isSshpassInstalled()) {
       return true;
@@ -32,4 +32,25 @@ module.exports = function checkSSHPass() {
     }
   }
   return true;
+}
+
+function sshConnectOptions(config) {
+  const { host, user, password, port } = config.remote.ssh;
+
+  const connectOptions = {
+    host,
+    port,
+    username: user,
+  };
+
+  if (password !== null) {
+    connectOptions.password = password;
+  }
+
+  return connectOptions;
+}
+
+module.exports = {
+  checkSSHPass,
+  sshConnectOptions,
 };

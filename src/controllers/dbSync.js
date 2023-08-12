@@ -5,6 +5,7 @@ const getDatabaseAdapter = require('./dbAdapters.js');
 const { assetPull, assetPush } = require('./assetSync.js');
 const { readConfig } = require('../util/configuration.js');
 const settings = require('../util/settings.js');
+const { sshConnectOptions } = require('../util/ssh.js');
 
 const config = readConfig();
 
@@ -15,18 +16,6 @@ const config = readConfig();
  * @return {Promise<void>} - A promise that resolves once the synchronization is complete.
  */
 async function databaseSync(direction) {
-  const { host, user, password, port } = config.remote.ssh;
-
-  const connectOptions = {
-    host,
-    port,
-    username: user,
-  };
-
-  if (password !== null) {
-    connectOptions.password = password;
-  }
-
   const { adapter: localAdapter } = config.local.database;
   const { adapter: remoteAdapter } = config.remote.database;
 
@@ -68,8 +57,6 @@ async function databaseSync(direction) {
                   config.remote.path + settings.components.database,
                   config.local.path,
                 );
-
-                importDatabase();
               });
           },
         );
@@ -80,27 +67,8 @@ async function databaseSync(direction) {
       .on('end', () => {
         console.log('SSH connection closed');
       })
-      .connect(connectOptions);
+      .connect(sshConnectOptions(config));
   }
-}
-
-function importDatabase() {
-  const importCommand =
-    'wp db import ' + config.local.path + settings.components.database;
-
-  const importProcess = spawn(importCommand, { shell: true });
-
-  importProcess.stdout.on('data', (data) => {
-    console.log(data.toString()); // Real-time output from stdout
-  });
-
-  importProcess.stderr.on('data', (data) => {
-    console.error(data.toString()); // Real-time output from stderr
-  });
-
-  importProcess.on('close', (code) => {
-    console.log('Database import completed');
-  });
 }
 
 module.exports = databaseSync;

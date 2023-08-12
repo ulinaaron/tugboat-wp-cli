@@ -1,7 +1,7 @@
 const { spawn } = require('child_process');
 
-const { readConfig } = require('../util/configuration.js');
-const settings = require('../util/settings.js');
+const { readConfig } = require('../../util/configuration.js');
+const settings = require('../../util/settings.js');
 const DatabaseAdapter = require('./BaseDBAdapter.js');
 
 const config = readConfig();
