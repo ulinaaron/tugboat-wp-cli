@@ -7,10 +7,21 @@ const DatabaseAdapter = require('./BaseDBAdapter.js');
 const config = readConfig();
 
 class WPCLIAdapter extends DatabaseAdapter {
+  /**
+   * Exports the database based on the current asset direction.
+   *
+   * @return {string} The command to export the database.
+   */
   async exportDatabase() {
-    // Implement the logic to export the database using WP-CLI
+    this.pullExportDatabase();
+    this.pushExportDatabase();
   }
 
+  /**
+   * Import the database asynchronously.
+   *
+   * @return {undefined} - No return value.
+   */
   async importDatabase() {
     const importCommand =
       'wp db import ' + config.local.path + settings.components.database;
@@ -29,6 +40,10 @@ class WPCLIAdapter extends DatabaseAdapter {
       console.log('Database import completed');
     });
   }
+
+  pullExportDatabase() {}
+
+  pushExportDatabase() {}
 }
 
 module.export = WPCLIAdapter;

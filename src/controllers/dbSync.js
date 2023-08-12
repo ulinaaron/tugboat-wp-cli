@@ -26,48 +26,11 @@ async function databaseSync(direction) {
   );
 
   if (direction === 'pull') {
-    const conn = new Client();
-    await conn
-      .on('ready', () => {
-        console.log('SSH connection established');
+    // Implement the logic to pull the database using the adapter.
+  }
 
-        conn.exec(
-          `cd ${config.remote.path} && wp db export ${config.remote.path}${settings.components.database}`,
-          (err, stream) => {
-            if (err) {
-              console.error('Error exporting the database:', err);
-              conn.end();
-              return;
-            }
-
-            console.log('Database export started');
-
-            stream
-              .on('data', (data) => {
-                console.log(data.toString()); // Real-time output from stdout
-              })
-              .stderr.on('data', (data) => {
-                console.error(data.toString()); // Real-time output from stderr
-              })
-              .on('close', (code, signal) => {
-                console.log('Database export completed');
-                conn.end();
-
-                assetPull(
-                  config.remote.path + settings.components.database,
-                  config.local.path,
-                );
-              });
-          },
-        );
-      })
-      .on('error', (err) => {
-        console.error('SSH connection error:', err);
-      })
-      .on('end', () => {
-        console.log('SSH connection closed');
-      })
-      .connect(sshConnectOptions(config));
+  if (direction === 'push') {
+    // Implement the logic to push the database using the adapter.
   }
 }
 
