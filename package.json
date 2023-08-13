@@ -6,7 +6,6 @@
     "link": "npm link",
     "unlink": "npm unlink tugboat-wp",
     "release": "npm version patch && npm publish",
-    "remove": "npm run unlink && npm run clean",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Aaron Mazade <ulinaaron@tutamail.com>",
@@ -29,14 +28,10 @@
     "eslint": "^8.46.0",
     "prettier": "^3.0.1"
   },
-  "nodemonConfig": {
-    "ignore": [
-      "coverage/*"
-    ]
-  },
   "bin": {
-    "tugboat-wp": "./src/index.js"
+    "tugboat-wp": "./bin/index.js"
   },
+  "type": "module",
   "engines": {
     "node": ">=16.0.0"
   },
