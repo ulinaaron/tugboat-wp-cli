@@ -1,5 +1,45 @@
-const DatabaseAdapter = require('./BaseDBAdapter');
+const { spawn } = require('child_process');
 
-class LocalWPAdapter extends DatabaseAdapter {}
+const DatabaseAdapter = require('./BaseDBAdapter');
+const { readConfig } = require('../../util/configuration.js');
+const settings = require('../../util/settings');
+const config = readConfig();
+
+class LocalWPAdapter extends DatabaseAdapter {
+  pullImportDatabase() {
+    // Local Import
+    console.log('Import database on local');
+
+    const socketPath = config.local.database.localwp.socket;
+    const username = 'root';
+    const password = 'root';
+    const database = 'local';
+    const sqlFilePath = settings.components.database;
+
+    console.log(socketPath);
+
+    const mysqlCommand = `mysql --socket=${JSON.stringify(
+      socketPath,
+    )} -u ${username} -p${password} ${database} < ${sqlFilePath}`;
+
+    console.log(mysqlCommand);
+
+    const childProcess = spawn('sh', ['-c', mysqlCommand]);
+
+    childProcess.stdout.on('data', (data) => {
+      console.log(data.toString());
+    });
+
+    childProcess.stderr.on('data', (data) => {
+      console.error(data.toString());
+    });
+
+    childProcess.on('close', (code) => {
+      if (code !== 0) {
+        console.error(`mysql process exited with code ${code}`);
+      }
+    });
+  }
+}
 
 module.exports.LocalWPAdapter = LocalWPAdapter;

@@ -1,10 +1,5 @@
-const { spawn } = require('child_process');
-const { Client } = require('ssh2');
-
-const getDatabaseAdapter = require('./dbAdapters.js');
-const { assetPull, assetPush } = require('./assetSync.js');
+const getDatabaseAdapters = require('./dbAdapters.js');
 const { readConfig } = require('../util/configuration.js');
-const settings = require('../util/settings.js');
 const { sshConnectOptions } = require('../util/ssh.js');
 
 const config = readConfig();
@@ -16,21 +11,25 @@ const config = readConfig();
  * @return {Promise<void>} - A promise that resolves once the synchronization is complete.
  */
 async function databaseSync(direction) {
-  const { adapter: localAdapter } = config.local.database;
-  const { adapter: remoteAdapter } = config.remote.database;
+  const localAdapter = config.local.database.adapter;
+  const remoteAdapter = config.remote.database.adapter;
 
-  const databaseAdapter = getDatabaseAdapter(
-    direction,
-    localAdapter,
-    remoteAdapter,
-  );
+  const adapters = getDatabaseAdapters(localAdapter, remoteAdapter);
 
   if (direction === 'pull') {
-    await databaseAdapter.pullExportDatabase();
-    await databaseAdapter.pullImportDatabase();
+    try {
+      await adapters.remote.pullExportDatabase();
+      console.log('Database export and asset pull completed successfully');
+      // Perform any additional tasks after the export and asset pull
+    } catch (error) {
+      console.error('Error during database export and asset pull:', error);
+      // Handle the error
+    }
+
+    await adapters.local.pullImportDatabase();
   } else if (direction === 'push') {
-    await databaseAdapter.pushExportDatabase();
-    await databaseAdapter.pushImportDatabase();
+    await adapters.local.pushExportDatabase();
+    await adapters.remote.pushImportDatabase();
   }
 }
 
