@@ -1,13 +1,5 @@
 const DatabaseAdapter = require('./BaseDBAdapter');
 
-class MySQLAdapter extends DatabaseAdapter {
-  async exportDatabase() {
-    // Implement the logic to export the database using mysql.
-  }
+class MySQLAdapter extends DatabaseAdapter {}
 
-  async importDatabase() {
-    // Implement the logic to import the database using mysql.
-  }
-}
-
-module.export = MySQLAdapter;
+module.exports.MySQLAdapter = MySQLAdapter;

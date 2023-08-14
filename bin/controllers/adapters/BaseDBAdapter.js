@@ -3,11 +3,33 @@ class DatabaseAdapter {
     this.direction = direction;
   }
   async importDatabase() {
-    // Implement importDatabase logic here
+    this.pushImportDatabase();
+    this.pullImportDatabase();
+  }
+
+  pushImportDatabase() {
+    // Implement the logic to push the database using the adapter.
+    console.log('Import database on remote');
+  }
+
+  pullImportDatabase() {
+    // Implement the logic to pull the database using the adapter.
+    console.log('Import database on local');
   }
 
   async exportDatabase() {
-    // Implement exportDatabase logic here
+    this.pushExportDatabase();
+    this.pullExportDatabase();
+  }
+
+  pushExportDatabase() {
+    // Implement the logic to push the database using the adapter.
+    console.log('Export database on local');
+  }
+
+  pullExportDatabase() {
+    // Implement the logic to pull the database using the adapter.
+    console.log('Export database on remote');
   }
 }
 

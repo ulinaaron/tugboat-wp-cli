@@ -26,11 +26,11 @@ async function databaseSync(direction) {
   );
 
   if (direction === 'pull') {
-    // Implement the logic to pull the database using the adapter.
-  }
-
-  if (direction === 'push') {
-    // Implement the logic to push the database using the adapter.
+    await databaseAdapter.pullExportDatabase();
+    await databaseAdapter.pullImportDatabase();
+  } else if (direction === 'push') {
+    await databaseAdapter.pushExportDatabase();
+    await databaseAdapter.pushImportDatabase();
   }
 }
 
