@@ -31,8 +31,8 @@ program
   .description(
     'Test your configuration with your local and remote environments without transferring any files.',
   )
-  .action(() => {
-    testCommand();
+  .action(async () => {
+    await testCommand();
   });
 
 program
@@ -44,7 +44,7 @@ program
   .option('-t, --themes', 'Pull themes assets')
   .option('-d, --database', 'Pull database assets')
   .action(async (options) => {
-    pullCommand(options);
+    await pullCommand(options);
   });
 
 program
@@ -55,7 +55,7 @@ program
   .option('-t, --themes', 'Push themes assets')
   .option('-d, --database', 'Push database assets')
   .action(async (options) => {
-    pushCommand(options);
+    await pushCommand(options);
   });
 
 program.parse(process.argv);

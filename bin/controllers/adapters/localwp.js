@@ -14,15 +14,11 @@ class LocalWPAdapter extends DatabaseAdapter {
     const username = 'root';
     const password = 'root';
     const database = 'local';
-    const sqlFilePath = settings.components.database;
-
-    console.log(socketPath);
+    const sqlFilePath = config.local.path + settings.components.database;
 
     const mysqlCommand = `mysql --socket=${JSON.stringify(
       socketPath,
     )} -u ${username} -p${password} ${database} < ${sqlFilePath}`;
-
-    console.log(mysqlCommand);
 
     const childProcess = spawn('sh', ['-c', mysqlCommand]);
 

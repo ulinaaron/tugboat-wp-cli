@@ -5,7 +5,6 @@ const { LocalWPAdapter } = require('./adapters/localwp.js');
 /**
  * Returns the appropriate database adapter based on the given parameters.
  *
- * @param {string} direction - The direction of the database sync: 'pull' or 'push'.
  * @param {string} localAdapter - The local database adapter: 'wp-cli', 'mysql', or 'localwp'.
  * @param {string} remoteAdapter - The remote database adapter: 'wp-cli' or 'mysql'.
  * @throws {Error} If an invalid direction or database adapter is specified.

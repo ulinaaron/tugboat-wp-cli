@@ -1,7 +1,4 @@
 class DatabaseAdapter {
-  constructor(direction) {
-    this.direction = direction;
-  }
   importDatabase() {
     this.pushImportDatabase();
     this.pullImportDatabase();

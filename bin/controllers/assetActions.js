@@ -9,6 +9,7 @@ const { addTrailingSlash } = require('../util/helpers.js');
  *
  * @param {string} actionName - The name of the action to perform on the components.
  * @param {Array} components - The list of components to perform the action on.
+ * @param {boolean} swapSourceAndDestination
  * @return {void}
  */
 function wpAssetActions(
