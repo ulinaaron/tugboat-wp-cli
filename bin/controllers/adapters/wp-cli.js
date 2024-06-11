@@ -16,7 +16,7 @@ class WPCLIAdapter extends DatabaseAdapter {
         console.log('SSH connection established');
 
         conn.exec(
-          `cd ${config.remote.path} && wp db export ${config.remote.path}${settings.components.database}`,
+          `cd ${config.remote.path} && wp search-replace "${config.remote.host}" "${config.local.host}" --export="${settings.components.database}" --report-changed-only`,
           (err, stream) => {
             if (err) {
               console.error('Error exporting the database:', err);
