@@ -47,6 +47,14 @@ function addTrailingSlash(filePath) {
   return filePath;
 }
 
+/**
+ * Waits for a file to exist at the given filepath.
+ *
+ * @param {string} filepath - The path of the file to wait for.
+ * @param {number} [timeout=5000] - The maximum time in milliseconds to wait for the file to exist. Defaults to 5000ms.
+ * @throws {Error} Thrown if the file does not exist after the specified timeout.
+ * @returns {Promise<boolean>} A Promise that resolves to true if the file exists within the specified timeout, otherwise rejects with an error.
+ */
 async function waitForFile(filepath, timeout = 5000) {
   let start = Date.now();
 
@@ -63,6 +71,17 @@ async function waitForFile(filepath, timeout = 5000) {
 }
 
 
+/**
+ * Replaces a prefix in a file with a new prefix.
+ *
+ * @param {string} filePath - The file path of the file to modify.
+ * @param {string} oldPrefix - The prefix to be replaced.
+ * @param {string} newPrefix - The new prefix to replace with.
+ *
+ * @return {undefined} - This function does not return a value.
+ *
+ * @throws {Error} - If an error occurs while replacing the prefixes in the file.
+ */
 async function replacePrefixInFile(filePath, oldPrefix, newPrefix) {
   try {
     const readStream = fs.createReadStream(filePath);
