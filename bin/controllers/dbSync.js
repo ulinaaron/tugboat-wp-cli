@@ -25,7 +25,7 @@ async function databaseSync(direction) {
       console.error('Error during database export and asset pull:', error);
       // Handle the error
     }
-
+    // TODO: This looks incomplete below this line.
     await adapters.local.pullImportDatabase();
   } else if (direction === 'push') {
     await adapters.local.pushExportDatabase();

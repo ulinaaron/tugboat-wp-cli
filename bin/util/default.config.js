@@ -7,6 +7,7 @@ module.exports = {
       // How would you like to connect to the database locally?
       // Possible values: wp-cli (default), localwp, mysql
       adapter: 'wp-cli',
+      prefix: 'wp_',
 
       // localwp: {
       //   socket: 'path/to/localwp/mysqlld.sock'
@@ -17,8 +18,10 @@ module.exports = {
       //   port: 3306, // The MySQL port
       //   user: 'root',
       //   password: '', // Leave empty for key-based authentication
-      //   database: 'local' // The database name
+      //   database: 'local', // The database name
+      //   socket: '',
       // },
+
     },
   },
   remote: {
@@ -48,14 +51,19 @@ module.exports = {
       // How would you like to connect to the database remotely?
       // Possible values: wp-cli (default), mysql
       adapter: 'wp-cli',
+      prefix: 'wp_',
 
       // mysql: {
       //   host: 'localhost', // The MySQL host
       //   port: 3306, // The MySQL port
       //   user: 'root',
       //   password: '', // Leave empty for key-based authentication
-      //   database: 'local' // The database name
-      // },
+      //   database: 'local', // The database name
+      //   socket: ''
+      // }
     },
   },
+  misc: {
+    db_engine: 'mariadb'
+  }
 };

@@ -1,3 +1,7 @@
+const fs = require('fs');
+const replace = require('replacestream');
+
+
 /**
  * Retrieves the version number of the package.
  *
@@ -43,4 +47,39 @@ function addTrailingSlash(filePath) {
   return filePath;
 }
 
-module.exports = { getVersion, removeExtraSpaces, addTrailingSlash };
+async function waitForFile(filepath, timeout = 5000) {
+  let start = Date.now();
+
+  while((Date.now() - start) < timeout) {
+    try {
+      await fs.promises.access(filepath);
+      return true;
+    } catch (error) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+  }
+
+  throw new Error(`File at ${filepath} did not exist after ${timeout}ms`);
+}
+
+
+async function replacePrefixInFile(filePath, oldPrefix, newPrefix) {
+  try {
+    const readStream = fs.createReadStream(filePath);
+    const writeStream = fs.createWriteStream(`${filePath}.tmp`);
+
+    readStream
+      .pipe(replace(oldPrefix, newPrefix))
+      .pipe(writeStream);
+
+    writeStream.on('finish', async () => {
+      await fs.promises.rename(`${filePath}.tmp`, filePath);
+      // console.log('Table prefixes replaced in file: ' + filePath);
+    });
+
+  } catch (error) {
+    console.error('An error occurred while replacing table prefixes in file: ' + filePath , error);
+  }
+}
+
+module.exports = { getVersion, removeExtraSpaces, addTrailingSlash, waitForFile, replacePrefixInFile };

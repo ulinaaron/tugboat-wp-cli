@@ -16,9 +16,14 @@ class LocalWPAdapter extends DatabaseAdapter {
     const database = 'local';
     const sqlFilePath = config.local.path + settings.components.database;
 
-    const mysqlCommand = `mysql --socket=${JSON.stringify(
-      socketPath,
-    )} -u ${username} -p${password} ${database} < ${sqlFilePath}`;
+    // const mysqlCommand =
+    //   `${config.misc.db_engine} --socket=${JSON.stringify(socketPath)} -u ${username} -p${password} ${database} -e "SET sql_mode='ALLOW_INVALID_DATES'; SOURCE ${sqlFilePath};"`;
+    //
+
+    const mysqlCommand =
+      `${config.misc.db_engine} --socket=${JSON.stringify(socketPath)} -u ${username} -p${password} -e ` +
+      `"DROP DATABASE IF EXISTS ${database}; CREATE DATABASE ${database}; USE ${database};` +
+      `SET sql_mode='ALLOW_INVALID_DATES'; SOURCE ${sqlFilePath};"`;
 
     const childProcess = spawn('sh', ['-c', mysqlCommand]);
 

@@ -3,6 +3,7 @@ const DatabaseAdapter = require('./BaseDBAdapter.js');
 const { readConfig } = require('../../util/configuration.js');
 const { sshConnectOptions } = require('../../util/ssh.js');
 const settings = require('../../util/settings.js');
+const { waitForFile, replacePrefixInFile } = require('../../util/helpers.js');
 const { assetPull } = require('../assetSync.js');
 
 const config = readConfig();
@@ -34,14 +35,18 @@ class WPCLIAdapter extends DatabaseAdapter {
               .stderr.on('data', (data) => {
                 console.error(data.toString()); // Real-time output from stderr
               })
-              .on('close', (code, signal) => {
+              .on('close', async (code, signal) => {
                 console.log('Database export completed');
                 conn.end();
 
-                assetPull(
+                await assetPull(
                   config.remote.path + settings.components.database,
                   config.local.path,
                 );
+
+                await waitForFile(config.local.path + settings.components.database);
+
+                await replacePrefixInFile(config.local.path + settings.components.database, config.remote.database.prefix, config.local.database.prefix);
 
                 resolve(); // Resolve the promise after the export and asset pull are completed
               });

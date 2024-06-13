@@ -1,8 +1,4 @@
 class DatabaseAdapter {
-  importDatabase() {
-    this.pushImportDatabase();
-    this.pullImportDatabase();
-  }
 
   pushImportDatabase() {
     // Remote Import
@@ -12,11 +8,6 @@ class DatabaseAdapter {
   pullImportDatabase() {
     // Local Import
     console.log('Import database on local');
-  }
-
-  exportDatabase() {
-    this.pushExportDatabase();
-    this.pullExportDatabase();
   }
 
   pushExportDatabase() {

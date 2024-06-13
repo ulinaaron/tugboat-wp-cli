@@ -23,7 +23,8 @@
     "inquirer": "^8.2.6",
     "mysql": "^2.18.1",
     "path": "^0.12.7",
-    "ssh2": "^1.14.0"
+    "replacestream": "^4.0.3",
+    "ssh2": "1.15.0"
   },
   "devDependencies": {
     "eslint": "^8.46.0",
