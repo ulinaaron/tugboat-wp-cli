@@ -4,12 +4,12 @@ const { readConfig } = require('../../util/configuration.js');
 const { sshConnectOptions } = require('../../util/ssh.js');
 const settings = require('../../util/settings.js');
 const { waitForFile, replacePrefixInFile } = require('../../util/helpers.js');
-const { assetPull } = require('../assetSync.js');
+const { assetPull, assetPush } = require('../assetSync.js');
 
 const config = readConfig();
 
 class WPCLIAdapter extends DatabaseAdapter {
-  pullExportDatabase() {
+  async pullExportDatabase() {
     return new Promise((resolve, reject) => {
       const conn = new Client();
 
@@ -67,8 +67,61 @@ class WPCLIAdapter extends DatabaseAdapter {
     });
   }
 
-  pushExportDatabase() {
-    // Local Export
+  // TODO: This is just a prototype that has been reverse-engineered by AI from the pullExportDatabase. Needs a lot of validation and revision before it is ready.
+  async pushExportDatabase() {
+    return new Promise((resolve, reject) => {
+      const conn = new Client();
+
+      conn.on('ready', () => {
+        console.log('SSH connection established');
+
+        conn.exec(
+          `cd ${config.local.path} && wp search-replace "${config.local.host}" "${config.remote.host}" --export="${settings.components.database}" --report-changed-only`,
+          async (err, stream) => {
+            if (err) {
+              console.error('Error exporting the local database:', err);
+              conn.end();
+              reject(err);
+              return;
+            }
+
+            console.log('Local database export started');
+
+            stream
+              .on('data', (data) => {
+                console.log(data.toString());
+              })
+              .stderr.on('data', (data) => {
+              console.error(data.toString());
+            })
+              .on('close', async (code, signal) => {
+                console.log('Local database export completed');
+                conn.end();
+
+                await replacePrefixInFile(config.local.path + settings.components.database, config.local.database.prefix, config.remote.database.prefix);
+
+                await assetPush(
+                  config.local.path + settings.components.database,
+                  config.remote.path,
+                );
+
+                resolve();
+              });
+          },
+        );
+      });
+
+      conn.on('error', (err) => {
+        console.error('SSH connection error:', err);
+        reject(err);
+      });
+
+      conn.on('end', () => {
+        console.log('SSH connection closed');
+      });
+
+      conn.connect(sshConnectOptions(config));
+    });
   }
 }
 
