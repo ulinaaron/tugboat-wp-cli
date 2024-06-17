@@ -17,25 +17,65 @@ class MySQLAdapter extends DatabaseAdapter {
   }
 
   pullExportDatabase(options = config.remote.database.mysql) {
-    const { host, socket, username, password, database } = options;
+    const { host, socket, username, password, database, port } = options;
   }
 
   pushImportDatabase(options = config.remote.database.mysql) {
-    const { host, socket, username, password, database } = options;
+    // Remote Import
+    console.log('Importing database on remote...');
+
+    const { host, socket, username, password, database, port } = options;
+    const sqlFilePath = config.remote.path + settings.components.database;
+
+    const engine = config.remote.database.engine;
+
+    let connectionDetail = socket
+      ? `--socket=${JSON.stringify(socket)}`
+      : `-h ${host}` + (port ? ` -P ${port}` : '');
+    let importCommand;
+    if (engine === 'mysql') {
+      importCommand =
+        `mysql ${connectionDetail} -u ${username} -p${password} -e ` +
+        `"DROP DATABASE IF EXISTS ${database}; CREATE DATABASE ${database}; USE ${database};` +
+        `SET sql_mode='ALLOW_INVALID_DATES'; SOURCE ${sqlFilePath};"`;
+    } else if (engine === 'mariadb') {
+      importCommand =
+        `mariadb ${connectionDetail} -u ${username} -p${password} -e ` +
+        `"DROP DATABASE IF EXISTS ${database}; CREATE DATABASE ${database}; USE ${database};` +
+        `SET sql_mode='ALLOW_INVALID_DATES'; SOURCE ${sqlFilePath};"`;
+    } else {
+      console.error('Unsupported database engine');
+    }
+
+    const childProcess = spawn('sh', ['-c', importCommand]);
+
+    childProcess.stdout.on('data', (data) => {
+      console.log(data.toString());
+    });
+
+    childProcess.stderr.on('data', (data) => {
+      console.error(data.toString());
+    });
+
+    childProcess.on('close', (code) => {
+      if (code !== 0) {
+        console.error(`mysql process exited with code ${code}`);
+      }
+    });
   }
 
   pullImportDatabase(options = config.local.database.mysql) {
     // Local Import
     console.log('Importing database on local...');
 
-    const { host, socket, username, password, database } = options;
+    const { host, socket, username, password, database, port } = options;
     const sqlFilePath = config.local.path + settings.components.database;
 
     const engine = config.local.database.engine;
 
     let connectionDetail = socket
       ? `--socket=${JSON.stringify(socket)}`
-      : `-h ${host}`;
+      : `-h ${host}` + (port ? ` -P ${port}` : '');
     let importCommand;
     if (engine === 'mysql') {
       importCommand =
@@ -71,15 +111,14 @@ class MySQLAdapter extends DatabaseAdapter {
     // Local Export
     console.log('Exporting database on local...');
 
-    const { host, socket, username, password, database } = options;
+    const { host, socket, username, password, database, port } = options;
     const sqlFilePath = config.local.path + settings.components.database;
 
     const engine = config.local.database.engine;
 
     let connectionDetail = socket
       ? `--socket=${JSON.stringify(socket)}`
-      : `-h ${host}`;
-
+      : `-h ${host}` + (port ? ` -P ${port}` : '');
     let dumpCommand;
     if (engine === 'mysql') {
       dumpCommand = `mysqldump ${connectionDetail} -u${username} -p${password} ${database} > ${sqlFilePath}`;
