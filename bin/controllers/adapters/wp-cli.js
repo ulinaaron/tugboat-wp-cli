@@ -68,7 +68,14 @@ class WPCLIAdapter extends DatabaseAdapter {
   }
 
   // TODO: This is just a prototype that has been reverse-engineered by AI from the pullExportDatabase. Needs a lot of validation and revision before it is ready.
-  async pushExportDatabase() {
+  async pushImportDatabase() {
+    // Push assets to remote server first
+    await assetPush(
+      config.local.path + settings.components.database,
+      config.remote.path,
+    );
+
+    // Now a promise wrapper for the rest of the operations
     return new Promise((resolve, reject) => {
       const conn = new Client();
 
@@ -76,16 +83,14 @@ class WPCLIAdapter extends DatabaseAdapter {
         console.log('SSH connection established');
 
         conn.exec(
-          `cd ${config.local.path} && wp search-replace "${config.local.host}" "${config.remote.host}" --export="${settings.components.database}" --report-changed-only`,
+          `cd ${config.remote.path} && wp db import "${settings.components.database}"`,
           async (err, stream) => {
             if (err) {
-              console.error('Error exporting the local database:', err);
+              console.error('Error importing the database:', err);
               conn.end();
               reject(err);
               return;
             }
-
-            console.log('Local database export started');
 
             stream
               .on('data', (data) => {
@@ -95,15 +100,8 @@ class WPCLIAdapter extends DatabaseAdapter {
               console.error(data.toString());
             })
               .on('close', async (code, signal) => {
-                console.log('Local database export completed');
+                console.log('Remote database import completed.');
                 conn.end();
-
-                await replacePrefixInFile(config.local.path + settings.components.database, config.local.database.prefix, config.remote.database.prefix);
-
-                await assetPush(
-                  config.local.path + settings.components.database,
-                  config.remote.path,
-                );
 
                 resolve();
               });

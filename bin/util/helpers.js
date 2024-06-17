@@ -101,4 +101,37 @@ async function replacePrefixInFile(filePath, oldPrefix, newPrefix) {
   }
 }
 
-module.exports = { getVersion, removeExtraSpaces, addTrailingSlash, waitForFile, replacePrefixInFile };
+/**
+ * Replaces multiple strings in a file.
+ *
+ * @param {string} filePath - The file path of the file to modify.
+ * @param {Array<{old: string, new: string}>} replacements - An array of objects with 'old' and 'new' properties
+ *                                                          representing the strings to be replaced and the ones to replace with.
+ *
+ * @return {undefined} - This function does not return a value.
+ *
+ * @throws {Error} - If an error occurs while replacing.
+ */
+async function multiReplaceInFile(filePath, replacements) {
+  try {
+    const readStream = fs.createReadStream(filePath);
+    const writeStream = fs.createWriteStream(`${filePath}.tmp`);
+
+    let stream = readStream;
+
+    replacements.forEach((replacement) => {
+      stream = stream.pipe(replace(replacement.old, replacement.new));
+    });
+
+    stream.pipe(writeStream);
+
+    writeStream.on('finish', async () => {
+      await fs.promises.rename(`${filePath}.tmp`, filePath);
+      // console.log('Replacement done in file: ' + filePath);
+    });
+  } catch (error) {
+    console.error('An error occurred while replacing in file: ' + filePath , error);
+  }
+}
+
+module.exports = { getVersion, removeExtraSpaces, addTrailingSlash, waitForFile, multiReplaceInFile, replacePrefixInFile };
