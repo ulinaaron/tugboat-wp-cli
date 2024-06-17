@@ -9,6 +9,15 @@ const { assetPull, assetPush } = require('../assetSync.js');
 const config = readConfig();
 
 class WPCLIAdapter extends DatabaseAdapter {
+  static get CAPABILITIES() {
+    return {
+      ...DatabaseAdapter.CAPABILITIES,
+      pushImportDatabase: true,
+      pullImportDatabase: true,
+      pushExportDatabase: true,
+      pullExportDatabase: true,
+    };
+  }
   async pullExportDatabase() {
     return new Promise((resolve, reject) => {
       const conn = new Client();

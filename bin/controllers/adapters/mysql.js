@@ -6,6 +6,17 @@ const config = readConfig();
 const { multiReplaceInFile } = require('../../util/helpers.js');
 
 class MySQLAdapter extends DatabaseAdapter {
+
+  static get CAPABILITIES() {
+    return {
+      ...DatabaseAdapter.CAPABILITIES,
+      pushImportDatabase: true,
+      pullImportDatabase: true,
+      pushExportDatabase: true,
+      pullExportDatabase: true,
+    };
+  }
+
   pullImportDatabase( options = config.local.database.mysql ) {
     // Local Import
     console.log('Importing database on local...');

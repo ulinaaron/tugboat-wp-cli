@@ -1,6 +1,5 @@
 const getDatabaseAdapters = require('./dbAdapters.js');
 const { readConfig } = require('../util/configuration.js');
-const { sshConnectOptions } = require('../util/ssh.js');
 
 const config = readConfig();
 
@@ -18,7 +17,7 @@ async function databaseSync(direction) {
 
   if (direction === 'pull') {
     try {
-      await adapters.remote.pullExportDatabase();
+      await adapters.remote.callMethod('pullExportDatabase');
       console.log('Database export and asset pull completed successfully');
       // Perform any additional tasks after the export and asset pull
     } catch (error) {
@@ -26,10 +25,10 @@ async function databaseSync(direction) {
       // Handle the error
     }
     // TODO: This looks incomplete below this line.
-    await adapters.local.pullImportDatabase();
+    await adapters.local.callMethod('pullImportDatabase');
   } else if (direction === 'push') {
-    await adapters.local.pushExportDatabase();
-    await adapters.remote.pushImportDatabase();
+    await adapters.local.callMethod('pushExportDatabase');
+    await adapters.remote.callMethod('pushImportDatabase');
   }
 }
 
