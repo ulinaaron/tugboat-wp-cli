@@ -25,12 +25,20 @@ class MySQLAdapter extends DatabaseAdapter {
     const sqlFilePath = config.local.path + settings.components.database;
 
     let connectionDetail = socket ? `--socket=${JSON.stringify(socket)}` : `-h ${host}`;
-    const mysqlCommand =
-      `${config.misc.db_engine} ${connectionDetail} -u ${username} -p${password} -e ` +
-      `"DROP DATABASE IF EXISTS ${database}; CREATE DATABASE ${database}; USE ${database};` +
-      `SET sql_mode='ALLOW_INVALID_DATES'; SOURCE ${sqlFilePath};"`;
+    let importCommand;
+    if (config.misc.db_engine === 'mysql') {
+      importCommand = `mysql ${connectionDetail} -u ${username} -p${password} -e ` +
+        `"DROP DATABASE IF EXISTS ${database}; CREATE DATABASE ${database}; USE ${database};` +
+        `SET sql_mode='ALLOW_INVALID_DATES'; SOURCE ${sqlFilePath};"`;
+    } else if (config.misc.db_engine === 'mariadb') {
+      importCommand = `mariadb ${connectionDetail} -u ${username} -p${password} -e ` +
+        `"DROP DATABASE IF EXISTS ${database}; CREATE DATABASE ${database}; USE ${database};` +
+        `SET sql_mode='ALLOW_INVALID_DATES'; SOURCE ${sqlFilePath};"`;
+    } else {
+      console.error('Unsupported database engine');
+    }
 
-    const childProcess = spawn('sh', ['-c', mysqlCommand]);
+    const childProcess = spawn('sh', ['-c', importCommand]);
 
     childProcess.stdout.on('data', (data) => {
       console.log(data.toString());
