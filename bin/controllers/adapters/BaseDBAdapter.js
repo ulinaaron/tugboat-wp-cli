@@ -21,7 +21,7 @@ class DatabaseAdapter {
     console.log('Import database on remote');
   }
 
-  pullImportDatabase() {
+  pullImportDatabase(socketPath, username, password, database) {
     // Local Import
     console.log('Import database on local');
   }

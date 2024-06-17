@@ -10,13 +10,17 @@ module.exports = {
       prefix: 'wp_',
 
       // localwp: {
+      //   host: 'localhost', // The MySQL host
+      //   username: 'root',
+      //   password: 'root',
+      //   database: 'local',
       //   socket: 'path/to/localwp/mysqlld.sock'
       // },
 
       // mysql: {
       //   host: 'localhost', // The MySQL host
       //   port: 3306, // The MySQL port
-      //   user: 'root',
+      //   username: 'root',
       //   password: '', // Leave empty for key-based authentication
       //   database: 'local', // The database name
       //   socket: '',

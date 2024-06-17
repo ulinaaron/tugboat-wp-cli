@@ -21,11 +21,12 @@ class MySQLAdapter extends DatabaseAdapter {
     // Local Import
     console.log('Importing database on local...');
 
-    const { socketPath, username, password, database } = options;
+    const { host, socket, username, password, database } = options;
     const sqlFilePath = config.local.path + settings.components.database;
 
+    let connectionDetail = socket ? `--socket=${JSON.stringify(socket)}` : `-h ${host}`;
     const mysqlCommand =
-      `${config.misc.db_engine} --socket=${JSON.stringify(socketPath)} -u ${username} -p${password} -e ` +
+      `${config.misc.db_engine} ${connectionDetail} -u ${username} -p${password} -e ` +
       `"DROP DATABASE IF EXISTS ${database}; CREATE DATABASE ${database}; USE ${database};` +
       `SET sql_mode='ALLOW_INVALID_DATES'; SOURCE ${sqlFilePath};"`;
 
@@ -49,16 +50,18 @@ class MySQLAdapter extends DatabaseAdapter {
     // Local Export
     console.log('Exporting database on local...');
 
-    const { socketPath, username, password, database } = options;
+    const { host, socket, username, password, database } = options;
     const sqlFilePath = config.local.path + settings.components.database;
 
     const engine = config.misc.db_engine;
 
+    let connectionDetail = socket ? `--socket=${JSON.stringify(socket)}` : `-h ${host}`;
+
     let dumpCommand;
     if (engine === 'mysql') {
-      dumpCommand = `mysqldump --socket=${JSON.stringify(socketPath)} -u${username} -p${password} ${database} > ${sqlFilePath}`;
+      dumpCommand = `mysqldump ${connectionDetail} -u${username} -p${password} ${database} > ${sqlFilePath}`;
     } else if (engine === 'mariadb') {
-      dumpCommand = `mariadb-dump --socket=${JSON.stringify(socketPath)} -u${username} -p${password} ${database} > ${sqlFilePath}`;
+      dumpCommand = `mariadb-dump ${connectionDetail} -u${username} -p${password} ${database} > ${sqlFilePath}`;
     } else {
       console.error('Unsupported database engine');
     }
