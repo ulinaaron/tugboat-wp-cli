@@ -6,7 +6,6 @@ const config = readConfig();
 const { multiReplaceInFile } = require('../../util/helpers.js');
 
 class MySQLAdapter extends DatabaseAdapter {
-
   static get CAPABILITIES() {
     return {
       ...DatabaseAdapter.CAPABILITIES,
@@ -17,21 +16,35 @@ class MySQLAdapter extends DatabaseAdapter {
     };
   }
 
-  pullImportDatabase( options = config.local.database.mysql ) {
+  pullExportDatabase(options = config.remote.database.mysql) {
+    const { host, socket, username, password, database } = options;
+  }
+
+  pushImportDatabase(options = config.remote.database.mysql) {
+    const { host, socket, username, password, database } = options;
+  }
+
+  pullImportDatabase(options = config.local.database.mysql) {
     // Local Import
     console.log('Importing database on local...');
 
     const { host, socket, username, password, database } = options;
     const sqlFilePath = config.local.path + settings.components.database;
 
-    let connectionDetail = socket ? `--socket=${JSON.stringify(socket)}` : `-h ${host}`;
+    const engine = config.local.database.engine;
+
+    let connectionDetail = socket
+      ? `--socket=${JSON.stringify(socket)}`
+      : `-h ${host}`;
     let importCommand;
-    if (config.misc.db_engine === 'mysql') {
-      importCommand = `mysql ${connectionDetail} -u ${username} -p${password} -e ` +
+    if (engine === 'mysql') {
+      importCommand =
+        `mysql ${connectionDetail} -u ${username} -p${password} -e ` +
         `"DROP DATABASE IF EXISTS ${database}; CREATE DATABASE ${database}; USE ${database};` +
         `SET sql_mode='ALLOW_INVALID_DATES'; SOURCE ${sqlFilePath};"`;
-    } else if (config.misc.db_engine === 'mariadb') {
-      importCommand = `mariadb ${connectionDetail} -u ${username} -p${password} -e ` +
+    } else if (engine === 'mariadb') {
+      importCommand =
+        `mariadb ${connectionDetail} -u ${username} -p${password} -e ` +
         `"DROP DATABASE IF EXISTS ${database}; CREATE DATABASE ${database}; USE ${database};` +
         `SET sql_mode='ALLOW_INVALID_DATES'; SOURCE ${sqlFilePath};"`;
     } else {
@@ -54,16 +67,18 @@ class MySQLAdapter extends DatabaseAdapter {
       }
     });
   }
-  pushExportDatabase( options = config.local.database.mysql ) {
+  pushExportDatabase(options = config.local.database.mysql) {
     // Local Export
     console.log('Exporting database on local...');
 
     const { host, socket, username, password, database } = options;
     const sqlFilePath = config.local.path + settings.components.database;
 
-    const engine = config.misc.db_engine;
+    const engine = config.local.database.engine;
 
-    let connectionDetail = socket ? `--socket=${JSON.stringify(socket)}` : `-h ${host}`;
+    let connectionDetail = socket
+      ? `--socket=${JSON.stringify(socket)}`
+      : `-h ${host}`;
 
     let dumpCommand;
     if (engine === 'mysql') {
@@ -91,13 +106,16 @@ class MySQLAdapter extends DatabaseAdapter {
         // replacePrefixInFile(sqlFilePath, config.local.database.prefix, config.remote.database.prefix );
 
         let replacements = [
-          {old: config.local.database.prefix, new: config.remote.database.prefix },
-          {old: config.local.host, new: config.remote.host},
+          {
+            old: config.local.database.prefix,
+            new: config.remote.database.prefix,
+          },
+          { old: config.local.host, new: config.remote.host },
         ];
 
         multiReplaceInFile(sqlFilePath, replacements)
           .then(() => console.log('Replacements made successfully'))
-          .catch(e => console.error('An error occurred', e));
+          .catch((e) => console.error('An error occurred', e));
       }
     });
   }

@@ -7,6 +7,7 @@ module.exports = {
       // How would you like to connect to the database locally?
       // Possible values: wp-cli (default), localwp, mysql
       adapter: 'wp-cli',
+      engine: 'mariadb',
       prefix: 'wp_',
 
       // localwp: {
@@ -25,7 +26,6 @@ module.exports = {
       //   database: 'local', // The database name
       //   socket: '',
       // },
-
     },
   },
   remote: {
@@ -55,6 +55,7 @@ module.exports = {
       // How would you like to connect to the database remotely?
       // Possible values: wp-cli (default), mysql
       adapter: 'wp-cli',
+      engine: 'mysql',
       prefix: 'wp_',
 
       // mysql: {
@@ -67,7 +68,4 @@ module.exports = {
       // }
     },
   },
-  misc: {
-    db_engine: 'mariadb'
-  }
 };
