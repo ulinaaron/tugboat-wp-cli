@@ -22,21 +22,37 @@ class DatabaseAdapter {
 
   pullExportDatabase() {
     // Remote Export
-    console.log('Export database on remote');
+    console.log("Export database on remote");
   }
   pushImportDatabase() {
     // Remote Import
-    console.log('Import database on remote');
+    console.log("Import database on remote");
   }
 
   pullImportDatabase() {
     // Local Import
-    console.log('Import database on local');
+    console.log("Import database on local");
   }
 
   pushExportDatabase() {
     // Local Export
-    console.log('Export database on local');
+    console.log("Export database on local");
+  }
+
+  getConnectionDetail(socket, host, port) {
+    let connectionDetail = "";
+
+    if (socket) {
+      connectionDetail = `--socket=${JSON.stringify(socket)}`;
+    } else if (host) {
+      connectionDetail = `-h ${host}`;
+
+      if (port) {
+        connectionDetail += ` -P ${port}`;
+      }
+    }
+
+    return connectionDetail;
   }
 }
 
