@@ -8,7 +8,7 @@ class DatabaseAdapter {
     };
   }
 
-  callMethod(methodName, ...params) {
+  async callMethod(methodName, ...params) {
     if (
       !(methodName in this.constructor.CAPABILITIES) ||
       !this.constructor.CAPABILITIES[methodName]
@@ -17,7 +17,8 @@ class DatabaseAdapter {
         `The method '${methodName}' is not supported by this adapter.`,
       );
     }
-    this[methodName](...params);
+
+    return await this[methodName](...params);
   }
 
   pullExportDatabase() {

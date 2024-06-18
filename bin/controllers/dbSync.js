@@ -1,5 +1,6 @@
-const getDatabaseAdapters = require('./dbAdapters.js');
-const { readConfig } = require('../util/configuration.js');
+const getDatabaseAdapters = require("./dbAdapters.js");
+const { readConfig } = require("../util/configuration.js");
+const chalk = require("chalk");
 
 const config = readConfig();
 
@@ -14,21 +15,30 @@ async function databaseSync(direction) {
   const remoteAdapter = config.remote.database.adapter;
 
   const adapters = getDatabaseAdapters(localAdapter, remoteAdapter);
-
-  if (direction === 'pull') {
-    try {
-      await adapters.remote.callMethod('pullExportDatabase');
-      console.log('Database export and asset pull completed successfully');
-      // Perform any additional tasks after the export and asset pull
-    } catch (error) {
-      console.error('Error during database export and asset pull:', error);
-      // Handle the error
+  try {
+    if (direction === "pull") {
+      console.log(chalk.blue("Starting pull process..."));
+      await adapters.remote.callMethod("pullExportDatabase");
+      await adapters.local.callMethod("pullImportDatabase");
+      console.log(
+        chalk.green("Success! The remote database has been imported."),
+      );
+    } else if (direction === "push") {
+      console.log(chalk.blue("Starting push process..."));
+      await adapters.local.callMethod("pushExportDatabase");
+      await adapters.remote.callMethod("pushImportDatabase");
+      console.log(
+        chalk.green(
+          "Success! The local database has been pushed to the remote..",
+        ),
+      );
     }
-    // TODO: This looks incomplete below this line.
-    await adapters.local.callMethod('pullImportDatabase');
-  } else if (direction === 'push') {
-    await adapters.local.callMethod('pushExportDatabase');
-    await adapters.remote.callMethod('pushImportDatabase');
+  } catch (error) {
+    console.error(
+      chalk.red("Error during database export and asset pull:"),
+      error,
+    );
+    // Handle the error
   }
 }
 

@@ -1,6 +1,6 @@
-const fs = require('fs');
-const replace = require('replacestream');
-
+const fs = require("fs");
+const replace = require("replacestream");
+const { once } = require("events");
 
 /**
  * Retrieves the version number of the package.
@@ -8,9 +8,9 @@ const replace = require('replacestream');
  * @return {string} The version number of the package. If not found, returns '0.0.0'.
  */
 function getVersion() {
-  const packageJson = require('../../package.json');
+  const packageJson = require("../../package.json");
   const { version } = packageJson;
-  return version || '0.0.0';
+  return version || "0.0.0";
 }
 
 /**
@@ -21,15 +21,15 @@ function getVersion() {
  */
 function removeExtraSpaces(script) {
   // Split the script by spaces
-  const scriptParts = script.split(' ');
+  const scriptParts = script.split(" ");
 
   // Remove any empty parts and trim leading/trailing spaces from each part
   const filteredParts = scriptParts
-    .filter((part) => part.trim() !== '')
+    .filter((part) => part.trim() !== "")
     .map((part) => part.trim());
 
   // Join the filtered parts back into a single string
-  const filteredScript = filteredParts.join(' ');
+  const filteredScript = filteredParts.join(" ");
 
   return filteredScript;
 }
@@ -41,8 +41,8 @@ function removeExtraSpaces(script) {
  * @return {string} The file path with a trailing slash added if necessary.
  */
 function addTrailingSlash(filePath) {
-  if (!filePath.endsWith('/') && !filePath.includes('.')) {
-    filePath += '/';
+  if (!filePath.endsWith("/") && !filePath.includes(".")) {
+    filePath += "/";
   }
   return filePath;
 }
@@ -58,18 +58,17 @@ function addTrailingSlash(filePath) {
 async function waitForFile(filepath, timeout = 5000) {
   let start = Date.now();
 
-  while((Date.now() - start) < timeout) {
+  while (Date.now() - start < timeout) {
     try {
       await fs.promises.access(filepath);
       return true;
     } catch (error) {
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
     }
   }
 
   throw new Error(`File at ${filepath} did not exist after ${timeout}ms`);
 }
-
 
 /**
  * Replaces a prefix in a file with a new prefix.
@@ -87,17 +86,17 @@ async function replacePrefixInFile(filePath, oldPrefix, newPrefix) {
     const readStream = fs.createReadStream(filePath);
     const writeStream = fs.createWriteStream(`${filePath}.tmp`);
 
-    readStream
-      .pipe(replace(oldPrefix, newPrefix))
-      .pipe(writeStream);
+    readStream.pipe(replace(oldPrefix, newPrefix)).pipe(writeStream);
 
-    writeStream.on('finish', async () => {
+    writeStream.on("finish", async () => {
       await fs.promises.rename(`${filePath}.tmp`, filePath);
       // console.log('Table prefixes replaced in file: ' + filePath);
     });
-
   } catch (error) {
-    console.error('An error occurred while replacing table prefixes in file: ' + filePath , error);
+    console.error(
+      "An error occurred while replacing table prefixes in file: " + filePath,
+      error,
+    );
   }
 }
 
@@ -125,13 +124,23 @@ async function multiReplaceInFile(filePath, replacements) {
 
     stream.pipe(writeStream);
 
-    writeStream.on('finish', async () => {
-      await fs.promises.rename(`${filePath}.tmp`, filePath);
-      // console.log('Replacement done in file: ' + filePath);
-    });
+    await once(writeStream, "finish");
+
+    await fs.promises.rename(`${filePath}.tmp`, filePath);
+    console.log("Replacement done in file: " + filePath);
   } catch (error) {
-    console.error('An error occurred while replacing in file: ' + filePath , error);
+    console.error(
+      "An error occurred while replacing in file: " + filePath,
+      error,
+    );
   }
 }
 
-module.exports = { getVersion, removeExtraSpaces, addTrailingSlash, waitForFile, multiReplaceInFile, replacePrefixInFile };
+module.exports = {
+  getVersion,
+  removeExtraSpaces,
+  addTrailingSlash,
+  waitForFile,
+  multiReplaceInFile,
+  replacePrefixInFile,
+};
