@@ -31,7 +31,9 @@ class MySQLAdapter extends DatabaseAdapter {
 
     let connectionDetail = socket
       ? `--socket=${JSON.stringify(socket)}`
-      : `-h ${host}` + (port ? ` -P ${port}` : '');
+      : host
+      ? `-h ${host}` + (port ? ` -P ${port}` : '')
+      : '';
     let importCommand;
     if (engine === 'mysql') {
       importCommand =
@@ -75,7 +77,9 @@ class MySQLAdapter extends DatabaseAdapter {
 
     let connectionDetail = socket
       ? `--socket=${JSON.stringify(socket)}`
-      : `-h ${host}` + (port ? ` -P ${port}` : '');
+      : host
+      ? `-h ${host}` + (port ? ` -P ${port}` : '')
+      : '';
     let importCommand;
     if (engine === 'mysql') {
       importCommand =
@@ -116,9 +120,13 @@ class MySQLAdapter extends DatabaseAdapter {
 
     const engine = config.local.database.engine;
 
-    let connectionDetail = socket
-      ? `--socket=${JSON.stringify(socket)}`
-      : `-h ${host}` + (port ? ` -P ${port}` : '');
+    let connectionDetail;
+    if (socket) {
+      connectionDetail = `--socket=${JSON.stringify(socket)}`;
+    } else if (host) {
+      connectionDetail = `-h ${host}` + (port ? ` -P ${port}` : '');
+    }
+
     let dumpCommand;
     if (engine === 'mysql') {
       dumpCommand = `mysqldump ${connectionDetail} -u${username} -p${password} ${database} > ${sqlFilePath}`;
