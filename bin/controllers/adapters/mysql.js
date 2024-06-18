@@ -41,6 +41,7 @@ class MySQLAdapter extends DatabaseAdapter {
     const { host, socket, username, password, database, port } = options;
     const sqlFilePath = path + settings.components.database;
 
+    const supportedEngines = ["mysql", "mariadb"];
     let engine;
     if (source === "local") {
       engine = config.local.database.engine;
@@ -48,6 +49,10 @@ class MySQLAdapter extends DatabaseAdapter {
       engine = config.remote.database.engine;
     } else {
       throw new Error(`Unsupported source: ${source}`);
+    }
+
+    if (!supportedEngines.includes(engine)) {
+      throw new Error(`Unsupported database engine: ${engine}`);
     }
 
     let connectionDetail = this.getConnectionDetail(socket, host, port);
