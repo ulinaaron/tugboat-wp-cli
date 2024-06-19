@@ -3,7 +3,7 @@ const DatabaseAdapter = require("./BaseDBAdapter.js");
 const { readConfig } = require("../../util/configuration.js");
 const { sshConnectOptions } = require("../../util/ssh.js");
 const settings = require("../../util/settings.js");
-const { waitForFile, replacePrefixInFile } = require("../../util/helpers.js");
+// const { waitForFile, replacePrefixInFile } = require("../../util/helpers.js");
 const { assetPull, assetPush } = require("../assetSync.js");
 
 const config = readConfig();
@@ -72,7 +72,7 @@ class WPCLIAdapter extends DatabaseAdapter {
         console.log("SSH connection closed");
       });
 
-      conn.connect(sshConnectOptions(config));
+      conn.connect(sshConnectOptions());
     });
   }
 
@@ -127,7 +127,7 @@ class WPCLIAdapter extends DatabaseAdapter {
         console.log("SSH connection closed");
       });
 
-      conn.connect(sshConnectOptions(config));
+      conn.connect(sshConnectOptions());
     });
   }
 }

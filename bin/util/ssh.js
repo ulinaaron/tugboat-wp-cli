@@ -1,6 +1,8 @@
-const { execSync } = require('child_process');
-const { readConfig } = require('./configuration.js');
+const { execSync } = require("child_process");
+const { readFileSync } = require("fs");
+const { readConfig } = require("./configuration.js");
 const config = readConfig();
+const defaultConfig = require("./default.config.js");
 
 /**
  * Checks if sshpass is installed.
@@ -10,7 +12,7 @@ const config = readConfig();
 function isSshpassInstalled() {
   try {
     // Check if sshpass is installed
-    execSync('which sshpass');
+    execSync("which sshpass");
     return true;
   } catch (error) {
     return false;
@@ -21,7 +23,7 @@ function isSshpassInstalled() {
  * Checks if the SSH password is provided in the config object and performs actions accordingly.
  *
  * @param {Object} config - The configuration object.
- * @return {void} - This function does not return anything.
+ * @return {boolean} - This function does not return anything.
  */
 function checkSSHPass() {
   if (config.remote.ssh.password) {
@@ -34,8 +36,8 @@ function checkSSHPass() {
   return true;
 }
 
-function sshConnectOptions(config) {
-  const { host, user, password, port } = config.remote.ssh;
+function sshConnectOptions() {
+  const { host, user, password, privateKey, port } = config.remote.ssh;
 
   const connectOptions = {
     host,
@@ -43,8 +45,13 @@ function sshConnectOptions(config) {
     username: user,
   };
 
-  if (password !== null) {
+  if (password !== defaultConfig.remote.ssh.password && password !== null) {
     connectOptions.password = password;
+  } else if (
+    privateKey !== defaultConfig.remote.ssh.privateKey &&
+    privateKey !== null
+  ) {
+    connectOptions.privateKey = readFileSync(privateKey);
   }
 
   return connectOptions;
