@@ -7,7 +7,7 @@ module.exports = {
       // How would you like to connect to the database locally?
       // Possible values: wp-cli (default), localwp, mysql
       adapter: "wp-cli",
-      engine: "mariadb",
+      engine: "mysql",
       prefix: "wp_",
 
       // localwp: {
