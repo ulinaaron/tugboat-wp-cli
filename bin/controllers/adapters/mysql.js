@@ -3,7 +3,11 @@ const { spawn } = require("child_process");
 const { readConfig } = require("../../util/configuration.js");
 const settings = require("../../util/settings");
 const config = readConfig();
-const { multiReplaceInFile, waitForFile } = require("../../util/helpers.js");
+const {
+  encodeUrlForSql,
+  multiReplaceInFile,
+  waitForFile,
+} = require("../../util/helpers.js");
 
 class MySQLAdapter extends DatabaseAdapter {
   static get CAPABILITIES() {
@@ -65,6 +69,10 @@ class MySQLAdapter extends DatabaseAdapter {
             new: config.local.database.prefix,
           },
           { old: config.remote.host, new: config.local.host },
+          {
+            old: encodeUrlForSql(config.remote.host),
+            new: encodeUrlForSql(config.local.host),
+          },
         ];
 
         try {
@@ -240,6 +248,10 @@ class MySQLAdapter extends DatabaseAdapter {
                   new: config.remote.database.prefix,
                 },
                 { old: config.local.host, new: config.remote.host },
+                {
+                  old: encodeUrlForSql(config.local.host),
+                  new: encodeUrlForSql(config.remote.host),
+                },
               ];
             } else if (source === "remote") {
               replacements = [
@@ -248,6 +260,10 @@ class MySQLAdapter extends DatabaseAdapter {
                   new: config.local.database.prefix,
                 },
                 { old: config.remote.host, new: config.local.host },
+                {
+                  old: encodeUrlForSql(config.remote.host),
+                  new: encodeUrlForSql(config.local.host),
+                },
               ];
             } else {
               console.error("Unidentified source");

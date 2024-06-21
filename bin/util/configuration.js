@@ -1,8 +1,8 @@
-const fs = require('fs');
-const path = require('path');
-const chalk = require('chalk');
+const fs = require("fs");
+const path = require("path");
+const chalk = require("chalk");
 
-const defaultConfig = require('./default.config.js');
+const defaultConfig = require("./default.config.js");
 
 /**
  * Finds the path of the specified config file in the current directory or its parent directories.
@@ -37,25 +37,25 @@ function findConfigPath(startPath, filename) {
  * @return {boolean} Returns true if the configuration files are present, otherwise false.
  */
 function hasConfig() {
-  const fs = require('fs');
+  const fs = require("fs");
 
   // Check if the current directory contains a tugboat.config.js file
-  const configPath = findConfigPath(process.cwd(), 'tugboat.config.js');
+  const configPath = findConfigPath(process.cwd(), "tugboat.config.js");
   if (!fs.existsSync(configPath)) {
     console.error(
       chalk.red.bold(
-        'Error: tugboat.config.js not found in the current directory.',
+        "Error: tugboat.config.js not found in the current directory.",
       ),
     );
     return false;
   }
 
   // Check if the current directory contains a wp-config.php file
-  const wpConfigPath = findConfigPath(process.cwd(), 'wp-config.php');
+  const wpConfigPath = findConfigPath(process.cwd(), "wp-config.php");
   if (!fs.existsSync(wpConfigPath)) {
     console.error(
       chalk.red.bold(
-        'Error: wp-config.php not found in the current directory.',
+        "Error: wp-config.php not found in the current directory.",
       ),
     );
     return false;
@@ -69,11 +69,16 @@ function hasConfig() {
 /**
  * Reads the configuration from the tugboat.config.js file.
  *
+ * @function readConfig
  * @return {Object|null} Returns the configuration object if found, null otherwise.
  */
 function readConfig() {
   try {
-    const configPath = findConfigPath(process.cwd(), 'tugboat.config.js');
+    const skeleton = {
+      remote: {},
+      local: {},
+    };
+    const configPath = findConfigPath(process.cwd(), "tugboat.config.js");
     if (!configPath) {
       return null;
     }
@@ -81,9 +86,9 @@ function readConfig() {
     const config = require(configPath);
 
     // Return the merged configuration object
-    return { ...defaultConfig, ...config };
+    return { ...skeleton, ...defaultConfig, ...config };
   } catch (error) {
-    console.error(chalk.red('Error reading tugboat.config.js:'), error);
+    console.error(chalk.red("Error reading tugboat.config.js:"), error);
     return null;
   }
 }
@@ -98,15 +103,15 @@ function readConfig() {
  * @return {void}
  */
 function copyDefaultConfig() {
-  const DEFAULT_CONFIG_PATH = path.join(__dirname, './default.config.js');
+  const DEFAULT_CONFIG_PATH = path.join(__dirname, "./default.config.js");
   const CURRENT_DIR = process.cwd();
-  const destinationPath = path.join(CURRENT_DIR, 'tugboat.config.js');
+  const destinationPath = path.join(CURRENT_DIR, "tugboat.config.js");
 
   fs.copyFile(DEFAULT_CONFIG_PATH, destinationPath, (err) => {
     if (err) {
       console.error(chalk.red(`Error copying default.config.js: ${err}`));
     } else {
-      console.log(chalk.green('tugboat.config.js created successfully!'));
+      console.log(chalk.green("tugboat.config.js created successfully!"));
     }
   });
 }
@@ -118,21 +123,21 @@ function copyDefaultConfig() {
  * @return {boolean} Returns true if the config is valid, false otherwise.
  */
 function isValidConfig(config) {
-  if (!config || typeof config !== 'object') {
+  if (!config || typeof config !== "object") {
     return false;
   }
 
   const { local, remote } = config;
 
   // Validate local host configuration
-  if (!local || typeof local !== 'object' || !local.host || !local.path) {
+  if (!local || typeof local !== "object" || !local.host || !local.path) {
     return false;
   }
 
   // Validate remote host configuration
   if (
     !remote ||
-    typeof remote !== 'object' ||
+    typeof remote !== "object" ||
     !remote.host ||
     !remote.path ||
     !remote.exclude ||
@@ -142,8 +147,8 @@ function isValidConfig(config) {
   }
 
   // Ensure that the default example host and paths are not used
-  const defaultHost = 'https://example.test';
-  const defaultPath = '/Users/name/website/public_html/';
+  const defaultHost = "https://example.test";
+  const defaultPath = "/Users/name/website/public_html/";
   if (
     local.host === defaultHost ||
     local.path === defaultPath ||

@@ -48,6 +48,23 @@ function addTrailingSlash(filePath) {
 }
 
 /**
+ * Encodes the given URL by removing trailing slash and encoding URI components.
+ * Additionally, certain characters are replaced to match SQL encoding.
+ *
+ * @param {string} url - The URL to be encoded.
+ * @returns {string} - The encoded URL.
+ */
+function encodeUrlForSql(url) {
+  // remove trailing slash if it exists
+  if (url[url.length - 1] === "/") {
+    url = url.slice(0, -1);
+  }
+
+  // encode URI components and replace certain characters to match SQL encoding
+  return encodeURIComponent(url).replace(/\./g, "\\.").replace(/\//g, "\\/");
+}
+
+/**
  * Waits for a file to exist at the given filepath.
  *
  * @param {string} filepath - The path of the file to wait for.
@@ -140,6 +157,7 @@ module.exports = {
   getVersion,
   removeExtraSpaces,
   addTrailingSlash,
+  encodeUrlForSql,
   waitForFile,
   multiReplaceInFile,
   replacePrefixInFile,

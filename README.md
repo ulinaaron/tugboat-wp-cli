@@ -1,14 +1,7 @@
-```
-                __/___
-          _____/______|
-  _______/_____\_______\_____
-  \              < < <       |
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-```
+![Build the web you want](.github/assets/tugboatwpbanner.png 'A command line tool for shipping WordPress.')
 
-# Tugboat WP CLI
-
-**Not ready for production use quite yet!!! Still very much a work in progress. All push and pull commands work besides database.**
+# Tugboat WP
+> 🚧 **Under Construction:** This application is currently under development and is not yet fully functional. It may contain bugs, incomplete features, or other discrepancies. Please use it with caution. Regular updates will provide bug fixes, improvements, and additional features.
 
 Tugboat WP is a command-line interface (CLI) tool designed to help with the WordPress development process. Push and pull WordPress assets (Plugins, Themes, Uploads, Database) from your local environment to a remote website, and vice versa. All configuration
 
@@ -32,12 +25,8 @@ For executing from a project root only:
 Otherwise to install everywhere:
 `npm install tugboat-wp -g`
 
-## Roadmap
+## Issues & Bug Reporting
 
-- [] Optimize code for production release.
-- [] Push and pull databases.
-- [] Support additional remote environments. (Production, Staging, etc)
-- [] Allow verbose transfers to show files status while they are being moved.
-- [] Remote activity log / commits for team-based deployments.
-- [] Pre/Post hooks to allow commands to be ran before and after deployments. Useful as an alternative to CI/CD asset building.
-- [] Custom directory support beyond the standard WordPress `wp-content` folders.
+Please use the Github Issues page to report any bugs or ask for feature enhancements.
+
+Remember, this app is a work in progress and we appreciate your patience and assistance in improving it.

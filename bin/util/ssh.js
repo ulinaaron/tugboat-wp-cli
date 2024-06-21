@@ -22,16 +22,12 @@ function isSshpassInstalled() {
 /**
  * Checks if the SSH password is provided in the config object and performs actions accordingly.
  *
- * @param {Object} config - The configuration object.
+ * @function checkSSHPass
  * @return {boolean} - This function does not return anything.
  */
 function checkSSHPass() {
   if (config.remote.ssh.password) {
-    if (isSshpassInstalled()) {
-      return true;
-    } else {
-      return false;
-    }
+    return isSshpassInstalled();
   }
   return true;
 }
